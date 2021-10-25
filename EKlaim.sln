@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1231
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "EKlaim", "EKlaim\EKlaim.vbproj", "{8285666A-F1BB-4C84-8D36-44DB30B793BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8285666A-F1BB-4C84-8D36-44DB30B793BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8285666A-F1BB-4C84-8D36-44DB30B793BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8285666A-F1BB-4C84-8D36-44DB30B793BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8285666A-F1BB-4C84-8D36-44DB30B793BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4614D607-FFE7-4DDB-97D3-ED2F3313C8D5}
+	EndGlobalSection
+EndGlobal
