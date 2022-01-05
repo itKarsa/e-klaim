@@ -86,6 +86,7 @@ Partial Class Pembukuan
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.btnPiutang = New System.Windows.Forms.Button()
         Me.btnUmum = New System.Windows.Forms.Button()
+        Me.btnTotal = New System.Windows.Forms.Button()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel6.SuspendLayout()
@@ -728,11 +729,13 @@ Partial Class Pembukuan
         Me.TableLayoutPanel3.Controls.Add(Me.Panel5, 1, 3)
         Me.TableLayoutPanel3.Controls.Add(Me.btnPiutang, 2, 4)
         Me.TableLayoutPanel3.Controls.Add(Me.btnUmum, 2, 5)
+        Me.TableLayoutPanel3.Controls.Add(Me.btnTotal, 2, 6)
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(0, 35)
         Me.TableLayoutPanel3.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
-        Me.TableLayoutPanel3.RowCount = 7
+        Me.TableLayoutPanel3.RowCount = 8
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -864,6 +867,28 @@ Partial Class Pembukuan
         Me.btnUmum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUmum.UseVisualStyleBackColor = False
         '
+        'btnTotal
+        '
+        Me.btnTotal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTotal.BackColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderSize = 0
+        Me.btnTotal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(239, Byte), Integer))
+        Me.btnTotal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.btnTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTotal.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTotal.Location = New System.Drawing.Point(17, 210)
+        Me.btnTotal.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnTotal.Name = "btnTotal"
+        Me.btnTotal.Padding = New System.Windows.Forms.Padding(6)
+        Me.btnTotal.Size = New System.Drawing.Size(150, 40)
+        Me.btnTotal.TabIndex = 14
+        Me.btnTotal.Text = "Total Rekapitulasi"
+        Me.btnTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTotal.UseVisualStyleBackColor = False
+        '
         'Pembukuan
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -950,4 +975,5 @@ Partial Class Pembukuan
     Friend WithEvents Column26 As DataGridViewTextBoxColumn
     Friend WithEvents Column27 As DataGridViewTextBoxColumn
     Friend WithEvents btnUmum As Button
+    Friend WithEvents btnTotal As Button
 End Class

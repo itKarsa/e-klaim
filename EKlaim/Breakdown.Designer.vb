@@ -81,6 +81,7 @@ Partial Class Berakdown
         Me.txtTotalRincian = New System.Windows.Forms.TextBox()
         Me.Label64 = New System.Windows.Forms.Label()
         Me.Panel16 = New System.Windows.Forms.Panel()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.btnSimpan = New System.Windows.Forms.Button()
         Me.picBack = New System.Windows.Forms.PictureBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -263,6 +264,28 @@ Partial Class Berakdown
         Me.btnPiutang = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.btnUmum = New System.Windows.Forms.Button()
+        Me.btnTotal = New System.Windows.Forms.Button()
+        Me.bgwRajal = New System.ComponentModel.BackgroundWorker()
+        Me.bgwKonsul = New System.ComponentModel.BackgroundWorker()
+        Me.bgwOpeParu = New System.ComponentModel.BackgroundWorker()
+        Me.bgwAkomodasi = New System.ComponentModel.BackgroundWorker()
+        Me.bgwBedah = New System.ComponentModel.BackgroundWorker()
+        Me.bgwNonBedah = New System.ComponentModel.BackgroundWorker()
+        Me.bgwTenagaAhli = New System.ComponentModel.BackgroundWorker()
+        Me.bgwFarmasi = New System.ComponentModel.BackgroundWorker()
+        Me.bgwBmhp = New System.ComponentModel.BackgroundWorker()
+        Me.bgwAlatMedis = New System.ComponentModel.BackgroundWorker()
+        Me.bgwRadiologi = New System.ComponentModel.BackgroundWorker()
+        Me.bgwLaborat = New System.ComponentModel.BackgroundWorker()
+        Me.bgwPenunjang = New System.ComponentModel.BackgroundWorker()
+        Me.bgwRehab = New System.ComponentModel.BackgroundWorker()
+        Me.bgwTindakan = New System.ComponentModel.BackgroundWorker()
+        Me.bgwAlkes = New System.ComponentModel.BackgroundWorker()
+        Me.bgwVisite = New System.ComponentModel.BackgroundWorker()
+        Me.bgwGizi = New System.ComponentModel.BackgroundWorker()
+        Me.bgwFarklin = New System.ComponentModel.BackgroundWorker()
+        Me.bgwFisio = New System.ComponentModel.BackgroundWorker()
+        Me.bgwAskep = New System.ComponentModel.BackgroundWorker()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -572,6 +595,7 @@ Partial Class Berakdown
         Me.Panel16.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel16.Controls.Add(Me.ProgressBar1)
         Me.Panel16.Controls.Add(Me.btnSimpan)
         Me.Panel16.Controls.Add(Me.picBack)
         Me.Panel16.Controls.Add(Me.Label3)
@@ -581,11 +605,22 @@ Partial Class Berakdown
         Me.Panel16.Size = New System.Drawing.Size(1018, 32)
         Me.Panel16.TabIndex = 10
         '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar1.Location = New System.Drawing.Point(0, 2)
+        Me.ProgressBar1.Margin = New System.Windows.Forms.Padding(0)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(1018, 3)
+        Me.ProgressBar1.TabIndex = 118
+        '
         'btnSimpan
         '
         Me.btnSimpan.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSimpan.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
+        Me.btnSimpan.Enabled = False
         Me.btnSimpan.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.btnSimpan.FlatAppearance.BorderSize = 0
         Me.btnSimpan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
@@ -936,6 +971,7 @@ Partial Class Berakdown
         DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvDrIgdKonsul.DefaultCellStyle = DataGridViewCellStyle5
+        Me.dgvDrIgdKonsul.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvDrIgdKonsul.EnableHeadersVisualStyles = False
         Me.dgvDrIgdKonsul.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvDrIgdKonsul.Location = New System.Drawing.Point(206, 298)
@@ -1117,6 +1153,7 @@ Partial Class Berakdown
         DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvFarklin.DefaultCellStyle = DataGridViewCellStyle10
+        Me.dgvFarklin.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvFarklin.EnableHeadersVisualStyles = False
         Me.dgvFarklin.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvFarklin.Location = New System.Drawing.Point(206, 968)
@@ -1207,6 +1244,7 @@ Partial Class Berakdown
         DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvGizi.DefaultCellStyle = DataGridViewCellStyle15
+        Me.dgvGizi.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvGizi.EnableHeadersVisualStyles = False
         Me.dgvGizi.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvGizi.Location = New System.Drawing.Point(206, 898)
@@ -1308,6 +1346,7 @@ Partial Class Berakdown
         DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvFisio.DefaultCellStyle = DataGridViewCellStyle20
+        Me.dgvFisio.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvFisio.EnableHeadersVisualStyles = False
         Me.dgvFisio.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvFisio.Location = New System.Drawing.Point(206, 1038)
@@ -1408,6 +1447,7 @@ Partial Class Berakdown
         DataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvDrKonsulRanap.DefaultCellStyle = DataGridViewCellStyle26
+        Me.dgvDrKonsulRanap.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvDrKonsulRanap.EnableHeadersVisualStyles = False
         Me.dgvDrKonsulRanap.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvDrKonsulRanap.Location = New System.Drawing.Point(206, 438)
@@ -1924,6 +1964,7 @@ Partial Class Berakdown
         DataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvAkomodasi.DefaultCellStyle = DataGridViewCellStyle32
+        Me.dgvAkomodasi.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvAkomodasi.EnableHeadersVisualStyles = False
         Me.dgvAkomodasi.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvAkomodasi.Location = New System.Drawing.Point(206, 58)
@@ -2011,6 +2052,7 @@ Partial Class Berakdown
         DataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvDrVisite.DefaultCellStyle = DataGridViewCellStyle38
+        Me.dgvDrVisite.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvDrVisite.EnableHeadersVisualStyles = False
         Me.dgvDrVisite.GridColor = System.Drawing.Color.Gainsboro
         Me.dgvDrVisite.Location = New System.Drawing.Point(206, 368)
@@ -2870,17 +2912,19 @@ Partial Class Berakdown
         'txtNoRanap
         '
         Me.txtNoRanap.AutoSize = True
-        Me.txtNoRanap.BackColor = System.Drawing.Color.Transparent
+        Me.txtNoRanap.BackColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(239, Byte), Integer))
+        Me.txtNoRanap.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtNoRanap.ForeColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
         Me.txtNoRanap.Location = New System.Drawing.Point(3, 5)
         Me.txtNoRanap.Name = "txtNoRanap"
-        Me.txtNoRanap.Size = New System.Drawing.Size(53, 13)
+        Me.txtNoRanap.Size = New System.Drawing.Size(56, 13)
         Me.txtNoRanap.TabIndex = 87
         Me.txtNoRanap.Text = "NoRanap"
-        Me.txtNoRanap.Visible = False
         '
         'txtRuang
         '
         Me.txtRuang.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtRuang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.txtRuang.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtRuang.FormattingEnabled = True
         Me.txtRuang.Location = New System.Drawing.Point(816, 0)
@@ -3122,11 +3166,13 @@ Partial Class Berakdown
         Me.TableLayoutPanel3.Controls.Add(Me.btnPiutang, 2, 4)
         Me.TableLayoutPanel3.Controls.Add(Me.Panel5, 1, 2)
         Me.TableLayoutPanel3.Controls.Add(Me.btnUmum, 2, 5)
+        Me.TableLayoutPanel3.Controls.Add(Me.btnTotal, 2, 6)
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(0, 35)
         Me.TableLayoutPanel3.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
-        Me.TableLayoutPanel3.RowCount = 7
+        Me.TableLayoutPanel3.RowCount = 8
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -3257,6 +3303,85 @@ Partial Class Berakdown
         Me.btnUmum.Text = "Rekapitulasi Piutang UMUM"
         Me.btnUmum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUmum.UseVisualStyleBackColor = False
+        '
+        'btnTotal
+        '
+        Me.btnTotal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTotal.BackColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderSize = 0
+        Me.btnTotal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(239, Byte), Integer))
+        Me.btnTotal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.btnTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTotal.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTotal.Location = New System.Drawing.Point(17, 210)
+        Me.btnTotal.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnTotal.Name = "btnTotal"
+        Me.btnTotal.Padding = New System.Windows.Forms.Padding(6)
+        Me.btnTotal.Size = New System.Drawing.Size(155, 40)
+        Me.btnTotal.TabIndex = 14
+        Me.btnTotal.Text = "Total Rekapitulasi"
+        Me.btnTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTotal.UseVisualStyleBackColor = False
+        '
+        'bgwKonsul
+        '
+        '
+        'bgwAkomodasi
+        '
+        '
+        'bgwBedah
+        '
+        '
+        'bgwNonBedah
+        '
+        '
+        'bgwTenagaAhli
+        '
+        '
+        'bgwFarmasi
+        '
+        '
+        'bgwBmhp
+        '
+        '
+        'bgwAlatMedis
+        '
+        '
+        'bgwRadiologi
+        '
+        '
+        'bgwLaborat
+        '
+        '
+        'bgwPenunjang
+        '
+        '
+        'bgwRehab
+        '
+        '
+        'bgwTindakan
+        '
+        '
+        'bgwAlkes
+        '
+        '
+        'bgwVisite
+        '
+        '
+        'bgwGizi
+        '
+        '
+        'bgwFarklin
+        '
+        '
+        'bgwFisio
+        '
+        '
+        'bgwAskep
+        '
         '
         'Berakdown
         '
@@ -3508,4 +3633,27 @@ Partial Class Berakdown
     Friend WithEvents txtTotParu As TextBox
     Friend WithEvents txtDrParu As TextBox
     Friend WithEvents Label69 As Label
+    Friend WithEvents bgwRajal As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwKonsul As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwOpeParu As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwAkomodasi As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwBedah As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwNonBedah As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwTenagaAhli As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwFarmasi As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwBmhp As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwAlatMedis As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwRadiologi As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwLaborat As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwPenunjang As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwRehab As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwTindakan As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwAlkes As System.ComponentModel.BackgroundWorker
+    Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents bgwVisite As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwGizi As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwFarklin As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwFisio As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwAskep As System.ComponentModel.BackgroundWorker
+    Friend WithEvents btnTotal As Button
 End Class

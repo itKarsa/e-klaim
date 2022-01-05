@@ -14,6 +14,7 @@ Public Class Eklaim
     Dim ci As IFormatProvider = New System.Globalization.CultureInfo("id-ID", True)
 
     Dim EncrypKey As String = "b9192b9f14c33f39153ef32f12dd68fa61eec2f3df34e2b96c24c6078dba568a"
+    Dim KoneksiString As String = "server=192.168.200.2;user=lis;password=lis1234;database=simrs;default command timeout=120;Convert Zero Datetime=True"
 
     Sub setColor(button As Button)
         btnHome.BackColor = Color.White
@@ -21,6 +22,7 @@ Public Class Eklaim
         btnBuku.BackColor = Color.White
         btnPiutang.BackColor = Color.White
         btnUmum.BackColor = Color.White
+        btnTotal.BackColor = Color.White
         button.BackColor = Color.FromArgb(209, 232, 223)
     End Sub
 
@@ -336,32 +338,39 @@ Public Class Eklaim
     End Function
 
     Function cekTarifDpjp() As Integer
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnTrfDpjp As New MySqlConnection("server=192.168.200.2;user=lis;password=lis1234;database=simrs;default command timeout=120;Convert Zero Datetime=True")
         Dim query As String
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
         Dim tarifDpjp As Integer
-        query = "SELECT tarif
-		           FROM vw_caritindakan
-	              WHERE kdTarif LIKE '0209%' AND kelas = '" & txtKelas.Text & "'"
+
+        query = "CALL tarifdpjpranap('" & txtUnit.Text & "','" & txtKelas.Text & "')"
         Try
-            cmd = New MySqlCommand(query, conn)
+            cnTrfDpjp.Open()
+            cmd = New MySqlCommand(query, cnTrfDpjp)
             dr = cmd.ExecuteReader
             dr.Read()
             If dr.HasRows Then
-                tarifDpjp = dr.Item("tarif")
+                If IsDBNull(dr.Item(0)) Then
+                    tarifDpjp = 0
+                Else
+                    tarifDpjp = CInt(dr.Item(0)).ToString("#,##0")
+                End If
             End If
             dr.Close()
+            cnTrfDpjp.Close()
         Catch ex As Exception
             MsgBox(ex.ToString)
+            cnTrfDpjp.Close()
         End Try
-        conn.Close()
 
         Return tarifDpjp
     End Function
 #Region "Non Bedah"
     Function tampilNonBedah() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnNonBedah As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -416,14 +425,21 @@ Public Class Eklaim
 			                    AND reg.noDaftar = '" & noDaftar & "' 
 	                        ) AS okparu"
         End If
+        Try
+            cnNonBedah.Open()
+            cmd = New MySqlCommand(query, cnNonBedah)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("nonBedah")
+            End If
+            dr.Close()
+            cnNonBedah.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Non Bedah", MsgBoxStyle.Exclamation)
+            cnNonBedah.Close()
+        End Try
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("nonBedah")
-        End If
-        conn.Close()
         Return value
     End Function
 
@@ -498,7 +514,8 @@ Public Class Eklaim
 #End Region
 #Region "Bedah"
     Function tampilBedah() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnBedah As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -510,16 +527,22 @@ Public Class Eklaim
 		          INNER JOIN t_registrasiop AS rop ON rop.noRegistrasiOP = top.noRegistrasiOP
 		          INNER JOIN t_registrasi AS reg ON reg.noDaftar = rop.noDaftarPasien
 		          WHERE dtop.statusHapus = 0 
-	                AND (dtop.tindakan != 'RR' AND dtop.kdTarif NOT LIKE '55%') 
-	                AND reg.noDaftar = '" & noDaftar & "'"
+	                AND reg.noDaftar = '" & noDaftar & "'" 'AND (dtop.tindakan != 'RR' AND dtop.kdTarif NOT LIKE '55%') 
+        Try
+            cnBedah.Open()
+            cmd = New MySqlCommand(query, cnBedah)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("bedah")
+            End If
+            dr.Close()
+            cnBedah.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Bedah", MsgBoxStyle.Exclamation)
+            cnBedah.Close()
+        End Try
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("bedah")
-        End If
-        conn.Close()
         Return value
     End Function
 
@@ -529,7 +552,7 @@ Public Class Eklaim
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
 
-        query = "SELECT top.tglTindakan,dtop.tindakan,dtop.tarif,
+        query = "SELECT top.tglTindakan,UPPER(dtop.tindakan) AS tindakan,dtop.tarif,
                         dtop.jmlTindakan,dtop.subTotal,TRIM(LEADING ';' FROM top.dokterOP) AS operator
                    FROM t_tindakanop AS top
              INNER JOIN t_registrasiop AS rop ON rop.noRegistrasiOP = top.noRegistrasiOP
@@ -537,8 +560,7 @@ Public Class Eklaim
              INNER JOIN t_detailtindakanop AS dtop ON top.noTindakanOP = dtop.noTindakanOP
              INNER JOIN t_tindakananestesi AS an ON rop.noRegistrasiOP = an.noRegistrasiOP
                   WHERE dtop.statusHapus = 0 
-                    AND (dtop.tindakan != 'RR' AND dtop.kdTarif NOT LIKE '55%')
-                    AND reg.noDaftar = '" & noDaftar & "'"
+                    AND reg.noDaftar = '" & noDaftar & "'"  'AND (dtop.tindakan != 'RR' AND dtop.kdTarif NOT LIKE '55%')
 
         Try
             cmd = New MySqlCommand(query, conn)
@@ -550,49 +572,68 @@ Public Class Eklaim
             Loop
             dr.Close()
         Catch ex As Exception
-            MsgBox(ex.ToString, "Detail Bedah", MsgBoxStyle.Exclamation)
+            MsgBox(ex.ToString, MsgBoxStyle.Exclamation)
         End Try
         conn.Close()
     End Sub
 #End Region
 #Region "Tenaga Ahli"
     Function tampilJasa() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnJasa As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
         Dim value As String = ""
 
         If txtRawat.Text.Contains("Rawat Jalan") Or txtRawat.Text.Contains("Igd") Then
-            query = "SELECT COALESCE(SUM(totalTarif),0) AS tenaga_ahli
-                   FROM vw_tindakanpasienrajaldetail 
-                  WHERE noDaftar = '" & noDaftar & "' 
-                    AND (tindakan LIKE 'JASA%' OR tindakan LIKE 'FISIOTERAPI%')
-                    AND (tindakan NOT LIKE 'JASA VISITE%' 
-                         AND tindakan NOT LIKE 'JASA ASUHAN KEPERAWATAN%'
-                         AND tindakan NOT LIKE 'JASA PEMERIKSAAN%'
-                         AND tindakan NOT LIKE 'JASA KONSULTASI%'
-                         AND kdtarif NOT LIKE '38%' 
-                         AND kdtarif NOT LIKE '54%')"
+            query = "SELECT COALESCE(SUM(totalTarif)) AS tenaga_ahli
+                       FROM t_detailtindakanpasienrajal
+                      WHERE (tindakan LIKE 'JASA ASUHAN GIZI%' OR 
+			                tindakan LIKE 'JASA ASUHAN FARMASI%' OR 
+			                tindakan LIKE 'FISIOTERAPI%')
+	                    AND noTindakanPasienRajal IN 
+		                    (SELECT noTindakanPasienRajal
+				               FROM t_tindakanpasienrajal
+				              WHERE noRegistrasiRawatJalan IN 
+			                (SELECT noRegistrasiRawatJalan 
+				               FROM t_registrasirawatjalan
+				              WHERE noDaftar = '" & noDaftar & "'))"
         ElseIf txtRawat.Text.Contains("Rawat Inap") Then
-            query = "SELECT COALESCE(SUM(totalTarif),0) AS tenaga_ahli
-                   FROM vw_tindakanpasienranapdetail 
-                  WHERE noDaftar = '" & noDaftar & "' 
-                    AND (tindakan LIKE 'JASA%' OR tindakan LIKE 'FISIOTERAPI%')
-                    AND (tindakan NOT LIKE 'JASA VISITE%'
-                         AND tindakan NOT LIKE 'JASA ASUHAN KEPERAWATAN%'
-                         AND tindakan NOT LIKE 'JASA KONSULTASI%'
-                         AND kdtarif NOT LIKE '38%' 
-                         AND kdtarif NOT LIKE '54%')"
+            query = "SELECT COALESCE(SUM(totalTarif)) AS tenaga_ahli
+                       FROM t_detailtindakanpasienranap
+                      WHERE (tindakan LIKE 'JASA ASUHAN GIZI%' OR 
+			                 tindakan LIKE 'JASA ASUHAN FARMASI%' OR 
+			                 tindakan LIKE 'FISIOTERAPI%')
+	                    AND noTindakanPasienRanap IN 
+		                    (SELECT noTindakanPasienRanap 
+				               FROM t_tindakanpasienranap 
+				              WHERE noDaftarRawatInap IN 
+			                (SELECT noDaftarRawatInap 
+				               FROM t_registrasirawatinap 
+				              WHERE noDaftar = '" & noDaftar & "'))"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("tenaga_ahli")
-        End If
-        conn.Close()
+        Try
+            cnJasa.Open()
+            cmd = New MySqlCommand(query, cnJasa)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                If IsDBNull(dr.Item(0)) Then
+                    value = 0
+                Else
+                    value = CInt(dr.Item(0)).ToString("#,##0")
+                End If
+                'value = dr.Item("tenaga_ahli").ToString
+            End If
+            dr.Close()
+            cnJasa.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Tenaga Ahli", MsgBoxStyle.Exclamation)
+            cnJasa.Close()
+        End Try
+
         Return value
     End Function
 
@@ -642,7 +683,8 @@ Public Class Eklaim
 #End Region
 #Region "Konsultasi"
     Function tampilVisite() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnKonsul As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -653,7 +695,8 @@ Public Class Eklaim
                        FROM vw_tindakanpasienrajaldetail 
                       WHERE noDaftar = '" & noDaftar & "' 
                         AND (tindakan LIKE 'JASA PEMERIKSAAN DOKTER%' 
-                         OR tindakan LIKE 'JASA KONSULTASI%'))
+                         OR tindakan LIKE 'JASA KONSULTASI%'
+                         OR tindakan LIKE 'KONSULTASI%'))
                             +
                     (SELECT COALESCE(SUM(rrj.konsulDokter),0) AS visite
                        FROM t_registrasirawatjalan AS rrj
@@ -671,14 +714,21 @@ Public Class Eklaim
                          OR tindakan LIKE 'JASA KONSULTASI SPESIALIS (PER KALI)%'
                          OR tindakan LIKE 'DOKTER PENANGGUNG JAWAB PASIEN%')"
         End If
+        Try
+            cnKonsul.Open()
+            cmd = New MySqlCommand(query, cnKonsul)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("visite").ToString
+            End If
+            dr.Close()
+            cnKonsul.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Konsultasi", MsgBoxStyle.Exclamation)
+            cnKonsul.Close()
+        End Try
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("visite").ToString
-        End If
-        conn.Close()
         Return value
     End Function
 
@@ -693,7 +743,8 @@ Public Class Eklaim
                        FROM vw_tindakanpasienrajaldetail 
                       WHERE noDaftar = '" & noDaftar & "' 
                         AND (tindakan LIKE 'JASA PEMERIKSAAN DOKTER%' 
-                         OR tindakan LIKE 'JASA KONSULTASI%')
+                         OR tindakan LIKE 'JASA KONSULTASI%'
+                         OR tindakan LIKE 'KONSULTASI%')
                       UNION ALL
                      SELECT rrj.tglMasukRawatJalan,'Konsultasi' AS tindakan,rrj.konsulDokter,
                             '1' AS jml,rrj.konsulDokter,ppa.namapetugasMedis
@@ -701,31 +752,31 @@ Public Class Eklaim
                  INNER JOIN t_registrasi AS reg ON reg.noDaftar = rrj.noDaftar
                  INNER JOIN t_tenagamedis2 AS ppa ON reg.kdTenagaMedis = ppa.kdPetugasMedis
                       WHERE rrj.noDaftar = '" & noDaftar & "'"
-        ElseIf txtRawat.Text.Contains("Rawat Inap") And txtIntensif.Text = 0 Then
+        ElseIf txtRawat.Text.Contains("Rawat Inap") And txtAkomodasi.Text <> 0 Then
             query = "SELECT tglTindakan,tindakan, tarif, 
                             jumlahTindakan, totalTarif, PPA
                        FROM vw_tindakanpasienranapdetail 
                       WHERE noDaftar = '" & noDaftar & "' 
                         AND (tindakan LIKE 'JASA VISITE%' 
-                         OR tindakan LIKE 'JASA KONSULTASI%' 
-                         OR tindakan LIKE 'DOKTER PENANGGUNG JAWAB PASIEN%')
-                      UNION ALL
-                     SELECT mrs,tindakan,tarif,'1',total,DPJP
-                       FROM (SELECT tindakan,tarif,tarif AS total 
-	                           FROM vw_caritindakan
-                              WHERE kdTarif LIKE '0209%' AND kelas = '" & txtKelas.Text & "') AS tind,
-                            (SELECT reg.tglDaftar AS mrs, dpjp.namapetugasMedis AS DPJP
-                               FROM t_registrasi AS reg
-                              INNER JOIN t_tenagamedis2 AS dpjp ON reg.kdTenagaMedis = dpjp.kdPetugasMedis
-                              WHERE reg.noDaftar = '" & noDaftar & "') AS dokter"
-        ElseIf txtRawat.Text.Contains("Rawat Inap") And txtIntensif.Text <> 0 Then
+                            OR tindakan LIKE 'JASA KONSULTASI%' 
+                            OR tindakan LIKE 'DOKTER PENANGGUNG JAWAB PASIEN%')
+                     UNION ALL
+                    SELECT mrs,tindakan,tarif,'1' AS jumlahTindakan,total,DPJP
+                      FROM (SELECT tindakan,tarif,tarif AS total 
+                      FROM vw_caritindakan
+                     WHERE kdTarif LIKE '0209%' AND kelas = '" & txtKelas.Text & "') AS tind,
+                           (SELECT reg.tglDaftar AS mrs, dpjp.namapetugasMedis AS DPJP
+                              FROM t_registrasi AS reg
+                        INNER JOIN t_tenagamedis2 AS dpjp ON reg.kdTenagaMedis = dpjp.kdPetugasMedis
+                             WHERE reg.noDaftar = '" & noDaftar & "') AS dokter"
+        ElseIf txtRawat.Text.Contains("Rawat Inap") And txtAkomodasi.Text = 0 Then
             query = "SELECT tglTindakan,tindakan, tarif, 
                             jumlahTindakan, totalTarif, PPA
                        FROM vw_tindakanpasienranapdetail 
                       WHERE noDaftar = '" & noDaftar & "' 
                         AND (tindakan LIKE 'JASA VISITE%' 
-                         OR tindakan LIKE 'JASA KONSULTASI%' 
-                         OR tindakan LIKE 'DOKTER PENANGGUNG JAWAB PASIEN%')"
+                             OR tindakan LIKE 'JASA KONSULTASI%' 
+                             OR tindakan LIKE 'DOKTER PENANGGUNG JAWAB PASIEN%')"
         End If
 
         Try
@@ -745,7 +796,8 @@ Public Class Eklaim
 #End Region
 #Region "Keperawatan"
     Function tampilTindakan() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnTindakan As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -759,6 +811,11 @@ Public Class Eklaim
                             AND tindakan NOT LIKE '%SEWA VENTILATOR%'
                             AND tindakan NOT LIKE '%SEWA SYRINGE%'
                             AND tindakan NOT LIKE '%NEBUL%'
+                            AND tindakan NOT LIKE '%EKG%'
+                            AND tindakan NOT LIKE '%ECG%'
+                            AND tindakan NOT LIKE 'ECHO%'
+			                AND tindakan NOT LIKE 'HOLTER%'
+			                AND tindakan NOT LIKE 'TREADMILL%'
                             XOR tindakan LIKE '%JASA ASUHAN KEPERAWATAN%')
                        AND (kdTarif NOT IN (0500040,1300011,4800042,4900042,5500060,020910,020920,020930,
                                              020940,020950,020960,020970,480710,490810,552501)
@@ -774,6 +831,11 @@ Public Class Eklaim
                             AND tindakan NOT LIKE '%SEWA VENTILATOR%'
                             AND tindakan NOT LIKE '%SEWA SYRINGE%'
                             AND tindakan NOT LIKE '%NEBUL%'
+                            AND tindakan NOT LIKE '%EKG%'
+                            AND tindakan NOT LIKE '%ECG%'
+                            AND tindakan NOT LIKE 'ECHO%'
+			                AND tindakan NOT LIKE 'HOLTER%'
+			                AND tindakan NOT LIKE 'TREADMILL%'
                             XOR tindakan LIKE '%JASA ASUHAN KEPERAWATAN%')
                         AND (kdTarif NOT IN (0500040,1300011,4800042,4900042,5500060,020910,020920,020930,
                                              020940,020950,020960,020970,480710,490810,552501)
@@ -782,13 +844,21 @@ Public Class Eklaim
                             XOR kdTarif LIKE '45%')"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("tindakan").ToString
-        End If
-        conn.Close()
+        Try
+            cnTindakan.Open()
+            cmd = New MySqlCommand(query, cnTindakan)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("tindakan").ToString
+            End If
+            dr.Close()
+            cnTindakan.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Keperawatan", MsgBoxStyle.Exclamation)
+            cnTindakan.Close()
+        End Try
+
         Return value
     End Function
 
@@ -808,6 +878,11 @@ Public Class Eklaim
                             AND tindakan NOT LIKE '%SEWA VENTILATOR%'
                             AND tindakan NOT LIKE '%SEWA SYRINGE%'
                             AND tindakan NOT LIKE '%NEBUL%'
+                            AND tindakan NOT LIKE '%EKG%'
+                            AND tindakan NOT LIKE '%ECG%'
+                            AND tindakan NOT LIKE 'ECHO%'
+			                AND tindakan NOT LIKE 'HOLTER%'
+			                AND tindakan NOT LIKE 'TREADMILL%'
                             XOR tindakan LIKE '%JASA ASUHAN KEPERAWATAN%')
                         AND (kdTarif NOT IN (0500040,1300011,4800042,4900042,5500060,020910,020920,020930,
                                              020940,020950,020960,020970,480710,490810,552501)
@@ -824,6 +899,11 @@ Public Class Eklaim
                             AND tindakan NOT LIKE '%SEWA VENTILATOR%'
                             AND tindakan NOT LIKE '%SEWA SYRINGE%'
                             AND tindakan NOT LIKE '%NEBUL%'
+                            AND tindakan NOT LIKE '%EKG%'
+                            AND tindakan NOT LIKE '%ECG%'
+                            AND tindakan NOT LIKE 'ECHO%'
+			                AND tindakan NOT LIKE 'HOLTER%'
+			                AND tindakan NOT LIKE 'TREADMILL%'
                             XOR tindakan LIKE '%JASA ASUHAN KEPERAWATAN%')
                         AND (kdTarif NOT IN (0500040,1300011,4800042,4900042,5500060,020910,020920,020930,
                                              020940,020950,020960,020970,480710,490810,552501)
@@ -849,7 +929,8 @@ Public Class Eklaim
 #End Region
 #Region "Penunjang"
     Function tampilPenunjang() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnPenunjang As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -858,27 +939,39 @@ Public Class Eklaim
             query = "SELECT COALESCE(SUM(totalTarif),0) AS tindakan
                        FROM vw_tindakanpasienrajaldetail 
                       WHERE noDaftar = '" & noDaftar & "'
-                        AND tindakan LIKE 'ECHO%'
-                        AND tindakan LIKE 'EKG%'
-                        AND tindakan LIKE 'ECG%'
-                        AND tindakan LIKE 'HOLTER%'"
+                        AND (tindakan LIKE 'ECHO%' 
+		                     OR tindakan LIKE '%EKG%' 
+		                     OR tindakan LIKE '%ECG%' 
+	                         OR tindakan LIKE '%TREADMILL%' 
+	                         OR tindakan LIKE 'HOLTER%'
+                             OR kdTarif LIKE '12%')"
         ElseIf txtRawat.Text.Contains("Rawat Inap") Then
             query = "SELECT COALESCE(SUM(totalTarif),0) AS tindakan
                        FROM vw_tindakanpasienranapdetail 
                       WHERE noDaftar = '" & noDaftar & "' 
-                        AND tindakan LIKE 'ECHO%'
-                        AND tindakan LIKE 'EKG%'
-                        AND tindakan LIKE 'ECG%'
-                        AND tindakan LIKE 'HOLTER%'"
+                        AND (tindakan LIKE 'ECHO%' 
+		                     OR tindakan LIKE '%EKG%' 
+		                     OR tindakan LIKE '%ECG%' 
+	                         OR tindakan LIKE '%TREADMILL%' 
+	                         OR tindakan LIKE 'HOLTER%'
+                             OR kdTarif LIKE '12%')"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("tindakan").ToString
-        End If
-        conn.Close()
+        Try
+            cnPenunjang.Open()
+            cmd = New MySqlCommand(query, cnPenunjang)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("tindakan").ToString
+            End If
+            dr.Close()
+            cnPenunjang.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Penunjang", MsgBoxStyle.Exclamation)
+            cnPenunjang.Close()
+        End Try
+
         Return value
     End Function
 
@@ -893,19 +986,23 @@ Public Class Eklaim
                             jumlahTindakan, totalTarif, PPA
                        FROM vw_tindakanpasienrajaldetail 
                       WHERE noDaftar = '" & noDaftar & "'
-                        AND tindakan LIKE 'ECHO%'
-                        AND tindakan LIKE 'EKG%'
-                        AND tindakan LIKE 'ECG%'
-                        AND tindakan LIKE 'HOLTER%'"
+                        AND (tindakan LIKE 'ECHO%' 
+		                     OR tindakan LIKE '%EKG%' 
+		                     OR tindakan LIKE '%ECG%' 
+	                         OR tindakan LIKE '%TREADMILL%' 
+	                         OR tindakan LIKE 'HOLTER%'
+                             OR kdTarif LIKE '12%')"
         ElseIf txtRawat.Text.Contains("Rawat Inap") Then
             query = "SELECT tglTindakan,tindakan, tarif, 
                             jumlahTindakan, totalTarif, PPA
                        FROM vw_tindakanpasienranapdetail 
                       WHERE noDaftar = '" & noDaftar & "' 
-                        AND tindakan LIKE 'ECHO%'
-                        AND tindakan LIKE 'EKG%'
-                        AND tindakan LIKE 'ECG%'
-                        AND tindakan LIKE 'HOLTER%'"
+                        AND (tindakan LIKE 'ECHO%' 
+		                     OR tindakan LIKE '%EKG%' 
+		                     OR tindakan LIKE '%ECG%' 
+	                         OR tindakan LIKE '%TREADMILL%' 
+	                         OR tindakan LIKE 'HOLTER%'
+                             OR kdTarif LIKE '12%')"
         End If
 
         Try
@@ -925,7 +1022,8 @@ Public Class Eklaim
 #End Region
 #Region "Laboratorium"
     Function tampilLab() As Integer
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnLab As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -953,13 +1051,21 @@ Public Class Eklaim
                             ) labpa"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("lab")
-        End If
-        conn.Close()
+        Try
+            cnLab.Open()
+            cmd = New MySqlCommand(query, cnLab)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("lab")
+            End If
+            dr.Close()
+            cnLab.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Laborat", MsgBoxStyle.Exclamation)
+            cnLab.Close()
+        End Try
+
         Return value
     End Function
 
@@ -970,7 +1076,7 @@ Public Class Eklaim
         Dim dr As MySqlDataReader
 
         If txtRawat.Text.Contains("Rawat Jalan") Or txtRawat.Text.Contains("Igd") Then
-            query = "SELECT tglMasukPenunjangRajal AS tglMasuk,tindakan, tarif, 
+            query = "SELECT tglMasukPenunjang AS tglMasuk,tindakan, tarif, 
                             jumlahTindakan, totalTarif, PPA
                        FROM vw_datadetaillabrajal
                       WHERE noDaftar = '" & noDaftar & "' 
@@ -1008,7 +1114,8 @@ Public Class Eklaim
 #End Region
 #Region "Radiologi"
     Function tampilRad() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnRad As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1024,13 +1131,22 @@ Public Class Eklaim
                       WHERE noDaftar = '" & noDaftar & "'"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("rad").ToString
-        End If
-        conn.Close()
+        Try
+            cnRad.Open()
+            cmd = New MySqlCommand(query, cnRad)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("rad").ToString
+            End If
+
+            dr.Close()
+            cnRad.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Radiologi", MsgBoxStyle.Exclamation)
+            cnRad.Close()
+        End Try
+
         Return value
     End Function
 
@@ -1069,7 +1185,8 @@ Public Class Eklaim
 #End Region
 #Region "BDRS"
     Function tampilDarah() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnDarah As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1089,13 +1206,21 @@ Public Class Eklaim
                       WHERE rlr.noDaftar = '" & noDaftar & "'"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("bdrs").ToString
-        End If
-        conn.Close()
+        Try
+            cnDarah.Open()
+            cmd = New MySqlCommand(query, cnDarah)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("bdrs").ToString
+            End If
+            dr.Close()
+            cnDarah.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail BDRS", MsgBoxStyle.Exclamation)
+            cnDarah.Close()
+        End Try
+
         Return value
     End Function
 
@@ -1148,7 +1273,8 @@ Public Class Eklaim
 #End Region
 #Region "Rehab"
     Function tampilRehab() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnRehab As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1166,13 +1292,21 @@ Public Class Eklaim
                     AND (kdTarif LIKE '38%' OR kdTarif LIKE '54%')"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("rehab")
-        End If
-        conn.Close()
+        Try
+            cnRehab.Open()
+            cmd = New MySqlCommand(query, cnRehab)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("rehab")
+            End If
+            dr.Close()
+            cnRehab.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Rehab", MsgBoxStyle.Exclamation)
+            cnRehab.Close()
+        End Try
+
         Return value
     End Function
 
@@ -1211,7 +1345,8 @@ Public Class Eklaim
 #End Region
 #Region "Akomodasi"
     Function tampilAkomodasi() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnAko As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1229,17 +1364,25 @@ Public Class Eklaim
                          AND rawatInap NOT LIKE '%HCU%' 
                          AND rawatInap NOT LIKE '%NICU%' 
                          AND rawatInap NOT LIKE '%PICU%'
-                         AND rawatInap NOT LIKE '%LAVENDER TANPA VENTILATOR%'
-                         AND rawatInap NOT LIKE '%LAVENDER VENTILATOR%')"
+                         AND rawatInap NOT LIKE '%LAVENDER%'
+                         AND rawatInap NOT LIKE '%LAVENDER%')"
         End If
+        'MsgBox(query)
+        Try
+            cnAko.Open()
+            cmd = New MySqlCommand(query, cnAko)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("akomodasi").ToString
+            End If
+            dr.Close()
+            cnAko.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Akomodasi", MsgBoxStyle.Exclamation)
+            cnAko.Close()
+        End Try
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("akomodasi").ToString
-        End If
-        conn.Close()
         Return value
     End Function
 
@@ -1268,8 +1411,8 @@ Public Class Eklaim
                          AND rawatInap NOT LIKE '%HCU%' 
                          AND rawatInap NOT LIKE '%NICU%' 
                          AND rawatInap NOT LIKE '%PICU%'
-                         AND rawatInap NOT LIKE '%LAVENDER TANPA VENTILATOR%'
-                         AND rawatInap NOT LIKE '%LAVENDER VENTILATOR%')"
+                         AND rawatInap NOT LIKE '%LAVENDER%'
+                         AND rawatInap NOT LIKE '%LAVENDER%')"
         End If
 
         Try
@@ -1297,7 +1440,8 @@ Public Class Eklaim
 #End Region
 #Region "Intensif"
     Function tampilIntensif() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnIntensif As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1308,18 +1452,27 @@ Public Class Eklaim
                   WHERE noDaftar = '" & noDaftar & "'
                     AND (rawatInap LIKE '%ICU%'
                          OR rawatInap LIKE '%HCU%'
-                         OR rawatInap LIKE '%LAVENDER TANPA VENTILATOR%'
-                         OR rawatInap LIKE '%LAVENDER VENTILATOR%')"
+                         OR rawatInap LIKE '%PICU%'
+                         OR rawatInap LIKE '%NICU%'
+                         OR rawatInap LIKE '%LAVENDER%'
+                         OR rawatInap LIKE '%LAVENDER%')"
+        Try
+            cnIntensif.Open()
+            cmd = New MySqlCommand(query, cnIntensif)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("akomodasi").ToString
+            ElseIf dr.IsDBNull(0) Then
+                value = "0"
+            End If
+            dr.Close()
+            cnIntensif.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail R.Intensif", MsgBoxStyle.Exclamation)
+            cnIntensif.Close()
+        End Try
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("akomodasi").ToString
-        ElseIf dr.IsDBNull(0) Then
-            value = "0"
-        End If
-        conn.Close()
         Return value
     End Function
 
@@ -1335,8 +1488,9 @@ Public Class Eklaim
                   WHERE noDaftar = '" & noDaftar & "'
                     AND (rawatInap LIKE '%ICU%'
                          OR rawatInap LIKE '%HCU%'
-                         OR rawatInap LIKE '%LAVENDER TANPA VENTILATOR%'
-                         OR rawatInap LIKE '%LAVENDER VENTILATOR%')"
+                         OR rawatInap LIKE '%PICU%'
+                         OR rawatInap LIKE '%NICU%'
+                         OR rawatInap LIKE '%LAVENDER%')"
 
         Try
             cmd = New MySqlCommand(query, conn)
@@ -1346,16 +1500,76 @@ Public Class Eklaim
                 dgvDetail.Rows.Add(dr.Item("tglMasukRawatInap"), dr.Item("kelas"), dr.Item("tarifKmr"),
                                    dr.Item("jumlahHariMenginap"), dr.Item("totalMenginap"), dr.Item("rawatInap"))
             Loop
+
             dr.Close()
         Catch ex As Exception
             MsgBox(ex.ToString, "Detail Intensif", MsgBoxStyle.Exclamation)
         End Try
         conn.Close()
     End Sub
+
+    Sub getAkomodasiICU()
+        Call koneksiServer()
+        Dim query As String = ""
+        Dim cmd As MySqlCommand
+        Dim dr As MySqlDataReader
+
+        query = "SELECT noDaftarRawatInap,SUM(jumlahHariMenginap) AS jumlahHariMenginap
+                   FROM vw_daftarruangakomodasi
+                  WHERE noDaftar = '" & noDaftar & "'
+                    AND (rawatInap LIKE '%ICU%'
+                         OR rawatInap LIKE '%HCU%'
+                         OR rawatInap LIKE '%PICU%'
+                         OR rawatInap LIKE '%NICU%'
+                         OR rawatInap LIKE '%LAVENDER%')"
+
+        Try
+            cmd = New MySqlCommand(query, conn)
+            dr = cmd.ExecuteReader
+            dr.Read()
+
+            If dr.HasRows Then
+                NumericUpDown1.Value = CInt(dr.Item("jumlahHariMenginap"))
+                getVenti(dr.Item("noDaftarRawatInap").ToString)
+            End If
+
+            dr.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, MsgBoxStyle.Exclamation)
+        End Try
+        conn.Close()
+    End Sub
+
+    Sub getVenti(noRanap As String)
+        Call koneksiServer()
+        Dim query As String = ""
+        Dim cmd As MySqlCommand
+        Dim dr As MySqlDataReader
+        Dim dt As New DataTable
+
+        query = "SELECT COALESCE(durasi,0) AS durasi
+                   FROM t_detailpenggunaanventilator
+                  WHERE noDaftarRawatInap = '" & noRanap & "'"
+        Try
+            cmd = New MySqlCommand(query, conn)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            'MsgBox(query)
+            If dr.HasRows Then
+                NumericUpDown2.Value = CInt(dr.Item("durasi"))
+            End If
+
+            dr.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, MsgBoxStyle.Exclamation)
+        End Try
+        conn.Close()
+    End Sub
 #End Region
 #Region "Obat"
     Function tampilObat() As (kronis As String, nonKronis As String)
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnObat As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1450,18 +1664,28 @@ Public Class Eklaim
 	                                obat.kdKelompokObat IN ('KO03','KO04')
                             ) AS okranap"
         End If
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value1 = dr.Item("totalKronis").ToString
-            value2 = dr.Item("totalNonKronis").ToString
-            'ElseIf dr.IsDBNull(0) Then
-            '    value1 = "0"
-            'ElseIf dr.IsDBNull(1) Then
-            '    value2 = "0"
-        End If
-        conn.Close()
+
+        Try
+            cnObat.Open()
+            cmd = New MySqlCommand(query, cnObat)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value1 = dr.Item("totalKronis").ToString
+                value2 = dr.Item("totalNonKronis").ToString
+                'ElseIf dr.IsDBNull(0) Then
+                '    value1 = "0"
+                'ElseIf dr.IsDBNull(1) Then
+                '    value2 = "0"
+            End If
+
+            dr.Close()
+            cnObat.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Obat", MsgBoxStyle.Exclamation)
+            cnObat.Close()
+        End Try
+
         Return (value1, value2)
     End Function
 
@@ -1706,8 +1930,7 @@ Public Class Eklaim
                       WHERE reg.noDaftar = '" & noDaftar & "' AND
 		                    obat.kdKelompokObat IN ('KO03','KO04')"
                 Case "IGD PINERE"
-            End Select
-            query = "SELECT jual.tglPenjualanObatRanap AS tglJual,
+                    query = "SELECT jual.tglPenjualanObatRanap AS tglJual,
                             detail.namaObat,
                             detail.harga,
                             detail.diberikanKronis,
@@ -1736,6 +1959,8 @@ Public Class Eklaim
 		                    INNER JOIN simrs.t_tenagamedis2 AS ppa ON jual.dokterPemberiResep = ppa.kdPetugasMedis
                       WHERE reg.noDaftar = '" & noDaftar & "' AND
 		                    obat.kdKelompokObat IN ('KO03','KO04')"
+            End Select
+
         ElseIf txtRawat.Text.Contains("Rawat Inap") And txtObatKronis.Text = "0" Then
             Return
         ElseIf txtRawat.Text.Contains("Rawat Inap") And txtObatKronis.Text <> "0" Then
@@ -1807,7 +2032,8 @@ Public Class Eklaim
 #End Region
 #Region "Alkes"
     Function tampilAlkes() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnAlkes As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -1898,13 +2124,23 @@ Public Class Eklaim
 		                            obat.kdKelompokObat IN ('KO01')	
                             ) AS alkesok"
         End If
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("Alkes").ToString
-        End If
-        conn.Close()
+
+        Try
+            cnAlkes.Open()
+            cmd = New MySqlCommand(query, cnAlkes)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("Alkes").ToString
+            End If
+
+            dr.Close()
+            cnAlkes.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Alkes", MsgBoxStyle.Exclamation)
+            cnAlkes.Close()
+        End Try
+
         Return value
     End Function
 
@@ -2056,7 +2292,8 @@ Public Class Eklaim
 #End Region
 #Region "BMHP"
     Function tampilBMHP() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnBMHP As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -2091,13 +2328,23 @@ Public Class Eklaim
 	                        (kel.kdKelompokTindakan IN (62, 63) OR
                             kel.tindakan LIKE 'OKSIGEN%')"
         End If
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("bmhp").ToString
-        End If
-        conn.Close()
+
+        Try
+            cnBMHP.Open()
+            cmd = New MySqlCommand(query, cnBMHP)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("bmhp").ToString
+            End If
+
+            dr.Close()
+            cnBMHP.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail BMHP", MsgBoxStyle.Exclamation)
+            cnBMHP.Close()
+        End Try
+
         Return value
     End Function
 
@@ -2170,7 +2417,8 @@ Public Class Eklaim
 #End Region
 #Region "Sewa Alat"
     Function tampilSewa() As String
-        Call koneksiServer()
+        'Call koneksiServer()
+        Dim cnSewa As New MySqlConnection(KoneksiString)
         Dim query As String = ""
         Dim cmd As MySqlCommand
         Dim dr As MySqlDataReader
@@ -2193,13 +2441,22 @@ Public Class Eklaim
                          OR kdTarif IN (480710,490810,552501))"
         End If
 
-        cmd = New MySqlCommand(query, conn)
-        dr = cmd.ExecuteReader
-        dr.Read()
-        If dr.HasRows Then
-            value = dr.Item("tindakan").ToString
-        End If
-        conn.Close()
+        Try
+            cnSewa.Open()
+            cmd = New MySqlCommand(query, cnSewa)
+            dr = cmd.ExecuteReader
+            dr.Read()
+            If dr.HasRows Then
+                value = dr.Item("tindakan").ToString
+            End If
+
+            dr.Close()
+            cnSewa.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString, "Detail Sewa Alat", MsgBoxStyle.Exclamation)
+            cnSewa.Close()
+        End Try
+
         Return value
     End Function
 
@@ -2378,43 +2635,62 @@ Public Class Eklaim
 
     Sub rincianBiaya()
         'Rincian Biaya
-        txtNonBedah.Text = CInt(tampilNonBedah()).ToString("#,##0")
-        txtBedah.Text = CInt(tampilBedah()).ToString("#,##0")
-        txtPPA.Text = CInt(tampilJasa()).ToString("#,##0")
-        txtKeperawatan.Text = CInt(tampilTindakan()).ToString("#,##0")
-        txtPenunjang.Text = CInt(tampilPenunjang()).ToString("#,##0")
-        txtLab.Text = CInt(tampilLab()).ToString("#,##0")
-        txtRadiologi.Text = CInt(tampilRad()).ToString("#,##0")
-        txtDarah.Text = CInt(tampilDarah()).ToString("#,##0")
-        txtRehab.Text = CInt(tampilRehab()).ToString("#,##0")
-        txtAkomodasi.Text = CInt(tampilAkomodasi()).ToString("#,##0")
-        Dim nonkronis = tampilObat()
-        Dim kronis = tampilObat()
-        txtObat.Text = (Math.Ceiling(CInt(nonkronis.nonKronis) / 100) * 100).ToString("#,##0")
-        txtObatKronis.Text = (Math.Ceiling(CInt(kronis.kronis) / 100) * 100).ToString("#,##0")
-        txtAlkes.Text = (Math.Ceiling(CInt(tampilAlkes()) / 100) * 100).ToString("#,##0")
-        txtBMHP.Text = (Math.Ceiling(CInt(tampilBMHP()) / 100) * 100).ToString("#,##0")
-        txtIntensif.Text = CInt(tampilIntensif()).ToString("#,##0")
-        txtSewaAlat.Text = CInt(tampilSewa()).ToString("#,##0")
 
-        If instalasi.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And txtIntensif.Text = 0 Then
-            If txtUnit.Text.Contains("Lavender") Or
-               txtUnit.Text.Contains("Kemuning") Then
-                txtKonsul.Text = CInt(tampilVisite()).ToString("#,##0")
-            End If
-            txtKonsul.Text = Val(CInt(tampilVisite()) + cekTarifDpjp()).ToString("#,##0")
-        Else
-            txtKonsul.Text = CInt(tampilVisite()).ToString("#,##0")
-        End If
+        bgwNonBedah.RunWorkerAsync()
+        bgwBedah.RunWorkerAsync()
+        bgwJasa.RunWorkerAsync()
+        bgwKonsul.RunWorkerAsync()
+        bgwTindakan.RunWorkerAsync()
+        bgwPenunjang.RunWorkerAsync()
+        bgwLab.RunWorkerAsync()
+        bgwRad.RunWorkerAsync()
+        bgwDarah.RunWorkerAsync()
+        bgwRehab.RunWorkerAsync()
+        bgwAkomodasi.RunWorkerAsync()
+        bgwIntensif.RunWorkerAsync()
+        bgwNonKronis.RunWorkerAsync()
+        bgwKronis.RunWorkerAsync()
+        bgwAlkes.RunWorkerAsync()
+        bgwBMHP.RunWorkerAsync()
+        bgwSewa.RunWorkerAsync()
+        CheckForIllegalCrossThreadCalls = False
+        'txtNonBedah.Text = CInt(tampilNonBedah()).ToString("#,##0")
+        'txtBedah.Text = CInt(tampilBedah()).ToString("#,##0")
+        'txtPPA.Text = CInt(tampilJasa()).ToString("#,##0")
+        'txtKeperawatan.Text = CInt(tampilTindakan()).ToString("#,##0")
+        'txtPenunjang.Text = CInt(tampilPenunjang()).ToString("#,##0")
+        'txtLab.Text = CInt(tampilLab()).ToString("#,##0")
+        'txtRadiologi.Text = CInt(tampilRad()).ToString("#,##0")
+        'txtDarah.Text = CInt(tampilDarah()).ToString("#,##0")
+        'txtRehab.Text = CInt(tampilRehab()).ToString("#,##0")
+        'txtAkomodasi.Text = CInt(tampilAkomodasi()).ToString("#,##0")
+        'Dim nonkronis = tampilObat()
+        'Dim kronis = tampilObat()
+        'txtObat.Text = (Math.Ceiling(CInt(nonkronis.nonKronis) / 100) * 100).ToString("#,##0")
+        'txtObatKronis.Text = (Math.Ceiling(CInt(kronis.kronis) / 100) * 100).ToString("#,##0")
+        'txtAlkes.Text = (Math.Ceiling(CInt(tampilAlkes()) / 100) * 100).ToString("#,##0")
+        'txtBMHP.Text = (Math.Ceiling(CInt(tampilBMHP()) / 100) * 100).ToString("#,##0")
+        'txtIntensif.Text = CInt(tampilIntensif()).ToString("#,##0")
+        'txtSewaAlat.Text = CInt(tampilSewa()).ToString("#,##0")
+
+        'If instalasi.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And txtIntensif.Text = 0 Then
+        '    If txtUnit.Text.Contains("Lavender") Or
+        '       txtUnit.Text.Contains("Kemuning") Then
+        '        txtKonsul.Text = CInt(tampilVisite()).ToString("#,##0")
+        '    End If
+        '    txtKonsul.Text = Val(CInt(tampilVisite()) + cekTarifDpjp()).ToString("#,##0")
+        'Else
+        '    txtKonsul.Text = CInt(tampilVisite()).ToString("#,##0")
+        'End If
 
         'Total Biaya
-        txtTotalTarif.Text = (Val(CInt(txtNonBedah.Text)) + Val(CInt(txtBedah.Text)) + Val(CInt(txtKonsul.Text)) +
-                              Val(CInt(txtPPA.Text)) + Val(CInt(txtKeperawatan.Text)) + Val(CInt(txtPenunjang.Text)) +
-                              Val(CInt(txtRadiologi.Text)) + Val(CInt(txtLab.Text)) + Val(CInt(txtDarah.Text)) +
-                              Val(CInt(txtRehab.Text)) + Val(CInt(txtAkomodasi.Text)) + Val(CInt(txtIntensif.Text)) +
-                              Val(CInt(txtObat.Text)) + Val(CInt(txtObatKronis.Text)) + Val(CInt(txtObatKemo.Text)) +
-                              Val(CInt(txtAlkes.Text)) + Val(CInt(txtBMHP.Text)) + Val(CInt(txtSewaAlat.Text))
-                             ).ToString("#,##0")
+        'txtTotalTarif.Text = (Val(CInt(txtNonBedah.Text)) + Val(CInt(txtBedah.Text)) + Val(CInt(txtKonsul.Text)) +
+        '                      Val(CInt(txtPPA.Text)) + Val(CInt(txtKeperawatan.Text)) + Val(CInt(txtPenunjang.Text)) +
+        '                      Val(CInt(txtRadiologi.Text)) + Val(CInt(txtLab.Text)) + Val(CInt(txtDarah.Text)) +
+        '                      Val(CInt(txtRehab.Text)) + Val(CInt(txtAkomodasi.Text)) + Val(CInt(txtIntensif.Text)) +
+        '                      Val(CInt(txtObat.Text)) + Val(CInt(txtObatKronis.Text)) + Val(CInt(txtObatKemo.Text)) +
+        '                      Val(CInt(txtAlkes.Text)) + Val(CInt(txtBMHP.Text)) + Val(CInt(txtSewaAlat.Text))
+        '                     ).ToString("#,##0")
     End Sub
 
     Private Sub Eklaim_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -2424,6 +2700,11 @@ Public Class Eklaim
         With Screen.PrimaryScreen.WorkingArea
             Me.SetBounds(.Left, .Top, .Width, .Height)
         End With
+
+        ProgressBar1.Minimum = 0
+        ProgressBar1.Maximum = 17
+        ProgressBar1.Value = 0
+        ProgressBar1.Visible = True
 
         txtUser.Text = Home.txtUser.Text
         btnEklaim.BackColor = Color.FromArgb(209, 232, 223)
@@ -2435,6 +2716,7 @@ Public Class Eklaim
         txtTglKlrRawat.CustomFormat = "dd MMM yyyy HH:mm:ss"
 
         noDaftar = Form1.noDaftar
+
         Call tampilDokter(noDaftar)
         Call unSelect()
         Call autoDokter()
@@ -2531,6 +2813,244 @@ Public Class Eklaim
         ElseIf txtCaraPulang.Text.Equals("Lain-lain", StringComparison.OrdinalIgnoreCase) Then
             wsCaraPulang = 5
         End If
+
+        noRM = txtNoRM.Text
+        noRegister = Form1.noDaftar
+        tglDaftar = Format(txtTglMskRawat.Value, "yyyy-MM-dd")
+        unit = txtRawat.Text
+        ruang = txtUnit.Text
+        kelas = txtKelas.Text
+    End Sub
+
+    Private Sub bgwNonBedah_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwNonBedah.DoWork
+        txtNonBedah.Text = CInt(tampilNonBedah()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwBedah_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwBedah.DoWork
+        txtBedah.Text = CInt(tampilBedah()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwJasa_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwJasa.DoWork
+        txtPPA.Text = CInt(tampilJasa()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwTindakan_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwTindakan.DoWork
+        txtKeperawatan.Text = CInt(tampilTindakan()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwPenunjang_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwPenunjang.DoWork
+        txtPenunjang.Text = CInt(tampilPenunjang()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwLab_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwLab.DoWork
+        txtLab.Text = CInt(tampilLab()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwRad_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwRad.DoWork
+        txtRadiologi.Text = CInt(tampilRad()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwKonsul_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwKonsul.DoWork
+        If instalasi.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And txtIntensif.Text = 0 Then
+            txtKonsul.Text = Val(CInt(tampilVisite()) + cekTarifDpjp()).ToString("#,##0")
+        Else
+            txtKonsul.Text = CInt(tampilVisite()).ToString("#,##0")
+        End If
+        txtKonsul.Text = CInt(tampilVisite()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwDarah_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwDarah.DoWork
+        txtDarah.Text = CInt(tampilDarah()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwRehab_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwRehab.DoWork
+        txtRehab.Text = CInt(tampilRehab()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwAkomodasi_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwAkomodasi.DoWork
+        txtAkomodasi.Text = CInt(tampilAkomodasi()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwIntensif_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwIntensif.DoWork
+        txtIntensif.Text = CInt(tampilIntensif()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwNonKronis_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwNonKronis.DoWork
+        Dim nonkronis = tampilObat()
+        txtObatKronis.Text = (Math.Ceiling(CInt(nonkronis.nonKronis) / 100) * 100).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+    Private Sub bgwKronis_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwKronis.DoWork
+        Dim kronis = tampilObat()
+        txtObatKronis.Text = (Math.Ceiling(CInt(kronis.kronis) / 100) * 100).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwKemo_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwKemo.DoWork
+
+    End Sub
+
+    Private Sub bgwAlkes_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwAlkes.DoWork
+        txtAlkes.Text = (Math.Ceiling(CInt(tampilAlkes()) / 100) * 100).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwBMHP_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwBMHP.DoWork
+        txtBMHP.Text = (Math.Ceiling(CInt(tampilBMHP()) / 100) * 100).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
+    End Sub
+
+    Private Sub bgwSewa_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwSewa.DoWork
+        txtSewaAlat.Text = CInt(tampilSewa()).ToString("#,##0")
+        ProgressBar1.Value = ProgressBar1.Value + 1
+        If ProgressBar1.Value = 17 Then
+            'MessageBox.Show("Pengambilan data selesai !!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ProgressBar1.Visible = False
+            btnSimpan.Enabled = True
+            Button2.Enabled = True
+            CheckedListBox1.Enabled = True
+            picBack.Enabled = True
+        End If
     End Sub
 
     Private Sub PicExpand_Click(sender As Object, e As EventArgs) Handles PicExpand.Click
@@ -2557,15 +3077,20 @@ Public Class Eklaim
 
     Private Sub btnBuku_Click(sender As Object, e As EventArgs) Handles btnBuku.Click
         Pembukuan.Show()
-        Me.Hide()
+        Me.Close()
     End Sub
     Private Sub btnPiutang_Click(sender As Object, e As EventArgs) Handles btnPiutang.Click
         RekapPiutang.Show()
-        Me.Hide()
+        Me.Close()
     End Sub
 
     Private Sub btnUmum_Click(sender As Object, e As EventArgs) Handles btnUmum.Click
         RekapPiutangUmum.Show()
+        Me.Close()
+    End Sub
+
+    Private Sub btnTotal_Click(sender As Object, e As EventArgs) Handles btnTotal.Click
+        TotalRekap.Show()
         Me.Hide()
     End Sub
 
@@ -2790,33 +3315,53 @@ Public Class Eklaim
     End Sub
 
     Private Sub checkIntensif_CheckedChanged(sender As Object, e As EventArgs) Handles checkIntensif.CheckedChanged
-        If checkIntensif.Checked = True Then
-            NumericUpDown1.Visible = True
-            NumericUpDown2.Visible = True
-            Label38.Visible = True
-            Label45.Visible = True
-            Label46.Visible = True
-            wsIcu = "1"
-        Else
-            NumericUpDown1.Visible = False
-            NumericUpDown2.Visible = False
-            Label38.Visible = False
-            Label45.Visible = False
-            Label46.Visible = False
-            wsIcu = "0"
-            NumericUpDown1.Value = 0
-            NumericUpDown2.Value = 0
-        End If
+        'If checkIntensif.Checked = True Then
+        '    NumericUpDown1.Visible = True
+        '    NumericUpDown2.Visible = True
+        '    Label38.Visible = True
+        '    Label45.Visible = True
+        '    Label46.Visible = True
+        '    wsIcu = "1"
+        'Else
+        '    NumericUpDown1.Visible = False
+        '    NumericUpDown2.Visible = False
+        '    Label38.Visible = False
+        '    Label45.Visible = False
+        '    Label46.Visible = False
+        '    wsIcu = "0"
+        '    NumericUpDown1.Value = 0
+        '    NumericUpDown2.Value = 0
+        'End If
+    End Sub
+
+    Private Sub checkIntensif_CheckStateChanged(sender As Object, e As EventArgs) Handles checkIntensif.CheckStateChanged
+        'If checkIntensif.Checked = CheckState.Checked Then
+        '    NumericUpDown1.Visible = True
+        '    NumericUpDown2.Visible = True
+        '    Label38.Visible = True
+        '    Label45.Visible = True
+        '    Label46.Visible = True
+        '    wsIcu = "1"
+        'Else
+        '    NumericUpDown1.Visible = False
+        '    NumericUpDown2.Visible = False
+        '    Label38.Visible = False
+        '    Label45.Visible = False
+        '    Label46.Visible = False
+        '    wsIcu = "0"
+        '    NumericUpDown1.Value = 0
+        '    NumericUpDown2.Value = 0
+        'End If
     End Sub
 
     Private Sub checkEksekutif_CheckedChanged(sender As Object, e As EventArgs) Handles checkEksekutif.CheckedChanged
-        If checkEksekutif.Checked = True Then
-            txtEksekutif.Visible = True
-            Label47.Visible = True
-        ElseIf checkEksekutif.Checked = False Then
-            txtEksekutif.Visible = False
-            Label47.Visible = False
-        End If
+        'If checkEksekutif.Checked = True Then
+        '    txtEksekutif.Visible = True
+        '    Label47.Visible = True
+        'ElseIf checkEksekutif.Checked = False Then
+        '    txtEksekutif.Visible = False
+        '    Label47.Visible = False
+        'End If
     End Sub
 
     Private Sub txtTotalTarif_Click(sender As Object, e As EventArgs) Handles txtTotalTarif.Click
@@ -2838,7 +3383,6 @@ Public Class Eklaim
         '    dgvjpRanap.Visible = True
         '    Call totalJpRanap()
         'End If
-
         Berakdown.Show()
         Me.Hide()
     End Sub
@@ -2865,8 +3409,8 @@ Public Class Eklaim
         TableLayoutPanel3.ColumnStyles(1).Width = 30
         txtLabelDetail.Text = "Detail Item - Prosedur Non Bedah"
         dgvDetail.Rows.Clear()
-        Call tampilNonBedah()
         Call detailNonBedah()
+        Call totalTarif()
         Panel2.AutoScroll = True
 
     End Sub
@@ -2903,8 +3447,8 @@ Public Class Eklaim
         TableLayoutPanel3.ColumnStyles(1).Width = 30
         txtLabelDetail.Text = "Detail Item - Prosedur Bedah"
         dgvDetail.Rows.Clear()
-        Call tampilBedah()
         Call detailBedah()
+        Call totalTarif()
         Panel2.AutoScroll = True
 
     End Sub
@@ -3056,8 +3600,8 @@ Public Class Eklaim
         TableLayoutPanel3.ColumnStyles(1).SizeType = SizeType.Percent
         TableLayoutPanel3.ColumnStyles(1).Width = 30
         txtLabelDetail.Text = "Detail Item - Penunjang"
-        Call tampilPenunjang()
         Call detailPenunjang()
+        Call totalTarif()
         Panel2.AutoScroll = True
 
     End Sub
@@ -3296,6 +3840,20 @@ Public Class Eklaim
         txtTotalTarif.Text = Format(a + b + c + d + ee + f +
                                     g + h + i + j + k + l +
                                     m + n + o + p + q + r, "###,###")
+
+        'Dim insentif As String = txtIntensif.Text.ToString
+        'If Not txtIntensif.Text = "0" Then
+        '    checkIntensif.Checked = True
+        '    checkIntensif.CheckState = CheckState.Checked
+        '    NumericUpDown1.Visible = True
+        '    NumericUpDown2.Visible = True
+        '    Label38.Visible = True
+        '    Label45.Visible = True
+        '    Label46.Visible = True
+        '    'wsIcu = "1"
+        '    'Call getAkomodasiICU()
+        '    MsgBox("Ada insentif")
+        'End If
     End Sub
 
     Private Sub txtIntensif_GotFocus(sender As Object, e As EventArgs) Handles txtIntensif.GotFocus
@@ -3572,5 +4130,6 @@ Public Class Eklaim
                               Val(CInt(txtAlkes.Text)) + Val(CInt(txtBMHP.Text)) + Val(CInt(txtSewaAlat.Text))
                              ).ToString("#,##0")
     End Sub
+
 #End Region
 End Class

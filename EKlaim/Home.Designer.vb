@@ -27,12 +27,17 @@ Partial Class Home
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.PicExpand = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.txtUser = New System.Windows.Forms.Label()
+        Me.picKeluar = New System.Windows.Forms.PictureBox()
+        Me.PicCollapse = New System.Windows.Forms.PictureBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -41,21 +46,17 @@ Partial Class Home
         Me.btnBuku = New System.Windows.Forms.Button()
         Me.btnPiutang = New System.Windows.Forms.Button()
         Me.btnUmum = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.PicExpand = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.picKeluar = New System.Windows.Forms.PictureBox()
-        Me.PicCollapse = New System.Windows.Forms.PictureBox()
+        Me.btnTotal = New System.Windows.Forms.Button()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
-        Me.TableLayoutPanel3.SuspendLayout()
-        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picKeluar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PicCollapse, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TableLayoutPanel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -110,6 +111,7 @@ Partial Class Home
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TableLayoutPanel2.BackColor = System.Drawing.Color.White
+        Me.TableLayoutPanel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.TableLayoutPanel2.ColumnCount = 1
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
@@ -121,6 +123,26 @@ Partial Class Home
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(989, 548)
         Me.TableLayoutPanel2.TabIndex = 4
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.Button1.FlatAppearance.BorderSize = 0
+        Me.Button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke
+        Me.Button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
+        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button1.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.ForeColor = System.Drawing.Color.DimGray
+        Me.Button1.Image = Global.EKlaim.My.Resources.Resources.setting
+        Me.Button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Button1.Location = New System.Drawing.Point(865, 507)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(121, 38)
+        Me.Button1.TabIndex = 0
+        Me.Button1.Text = "Set IP Server"
+        Me.Button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -135,6 +157,20 @@ Partial Class Home
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(177, 35)
         Me.Panel1.TabIndex = 3
+        '
+        'PicExpand
+        '
+        Me.PicExpand.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.PicExpand.BackColor = System.Drawing.Color.Transparent
+        Me.PicExpand.Image = Global.EKlaim.My.Resources.Resources.opsi2
+        Me.PicExpand.Location = New System.Drawing.Point(150, 9)
+        Me.PicExpand.Margin = New System.Windows.Forms.Padding(0)
+        Me.PicExpand.Name = "PicExpand"
+        Me.PicExpand.Size = New System.Drawing.Size(25, 24)
+        Me.PicExpand.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PicExpand.TabIndex = 4
+        Me.PicExpand.TabStop = False
         '
         'Label1
         '
@@ -198,6 +234,19 @@ Partial Class Home
         Me.Panel7.Size = New System.Drawing.Size(1, 28)
         Me.Panel7.TabIndex = 8
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(40, 34)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 0
+        Me.PictureBox1.TabStop = False
+        '
         'txtUser
         '
         Me.txtUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -212,6 +261,34 @@ Partial Class Home
         Me.txtUser.TabIndex = 2
         Me.txtUser.Text = "USER"
         Me.txtUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'picKeluar
+        '
+        Me.picKeluar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picKeluar.BackColor = System.Drawing.Color.Transparent
+        Me.picKeluar.Image = Global.EKlaim.My.Resources.Resources.signs_2
+        Me.picKeluar.Location = New System.Drawing.Point(967, 0)
+        Me.picKeluar.Margin = New System.Windows.Forms.Padding(0)
+        Me.picKeluar.Name = "picKeluar"
+        Me.picKeluar.Size = New System.Drawing.Size(40, 35)
+        Me.picKeluar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picKeluar.TabIndex = 3
+        Me.picKeluar.TabStop = False
+        '
+        'PicCollapse
+        '
+        Me.PicCollapse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PicCollapse.BackColor = System.Drawing.Color.Transparent
+        Me.PicCollapse.Image = Global.EKlaim.My.Resources.Resources.opsi1
+        Me.PicCollapse.Location = New System.Drawing.Point(10, 9)
+        Me.PicCollapse.Margin = New System.Windows.Forms.Padding(0)
+        Me.PicCollapse.Name = "PicCollapse"
+        Me.PicCollapse.Size = New System.Drawing.Size(25, 24)
+        Me.PicCollapse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PicCollapse.TabIndex = 5
+        Me.PicCollapse.TabStop = False
         '
         'Label2
         '
@@ -247,11 +324,13 @@ Partial Class Home
         Me.TableLayoutPanel3.Controls.Add(Me.btnBuku, 2, 3)
         Me.TableLayoutPanel3.Controls.Add(Me.btnPiutang, 2, 4)
         Me.TableLayoutPanel3.Controls.Add(Me.btnUmum, 2, 5)
+        Me.TableLayoutPanel3.Controls.Add(Me.btnTotal, 2, 6)
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(0, 35)
         Me.TableLayoutPanel3.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
-        Me.TableLayoutPanel3.RowCount = 7
+        Me.TableLayoutPanel3.RowCount = 8
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -383,80 +462,27 @@ Partial Class Home
         Me.btnUmum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUmum.UseVisualStyleBackColor = False
         '
-        'Button1
+        'btnTotal
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.Button1.FlatAppearance.BorderSize = 0
-        Me.Button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke
-        Me.Button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
-        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button1.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.ForeColor = System.Drawing.Color.DimGray
-        Me.Button1.Image = Global.EKlaim.My.Resources.Resources.setting
-        Me.Button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Button1.Location = New System.Drawing.Point(865, 507)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(121, 38)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Set IP Server"
-        Me.Button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'PicExpand
-        '
-        Me.PicExpand.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.btnTotal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PicExpand.BackColor = System.Drawing.Color.Transparent
-        Me.PicExpand.Image = Global.EKlaim.My.Resources.Resources.opsi2
-        Me.PicExpand.Location = New System.Drawing.Point(150, 9)
-        Me.PicExpand.Margin = New System.Windows.Forms.Padding(0)
-        Me.PicExpand.Name = "PicExpand"
-        Me.PicExpand.Size = New System.Drawing.Size(25, 24)
-        Me.PicExpand.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PicExpand.TabIndex = 4
-        Me.PicExpand.TabStop = False
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(0)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(40, 34)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox1.TabIndex = 0
-        Me.PictureBox1.TabStop = False
-        '
-        'picKeluar
-        '
-        Me.picKeluar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.picKeluar.BackColor = System.Drawing.Color.Transparent
-        Me.picKeluar.Image = Global.EKlaim.My.Resources.Resources.signs_2
-        Me.picKeluar.Location = New System.Drawing.Point(967, 0)
-        Me.picKeluar.Margin = New System.Windows.Forms.Padding(0)
-        Me.picKeluar.Name = "picKeluar"
-        Me.picKeluar.Size = New System.Drawing.Size(40, 35)
-        Me.picKeluar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picKeluar.TabIndex = 3
-        Me.picKeluar.TabStop = False
-        '
-        'PicCollapse
-        '
-        Me.PicCollapse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.PicCollapse.BackColor = System.Drawing.Color.Transparent
-        Me.PicCollapse.Image = Global.EKlaim.My.Resources.Resources.opsi1
-        Me.PicCollapse.Location = New System.Drawing.Point(10, 9)
-        Me.PicCollapse.Margin = New System.Windows.Forms.Padding(0)
-        Me.PicCollapse.Name = "PicCollapse"
-        Me.PicCollapse.Size = New System.Drawing.Size(25, 24)
-        Me.PicCollapse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PicCollapse.TabIndex = 5
-        Me.PicCollapse.TabStop = False
+        Me.btnTotal.BackColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderSize = 0
+        Me.btnTotal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(239, Byte), Integer))
+        Me.btnTotal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.btnTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTotal.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTotal.Location = New System.Drawing.Point(17, 210)
+        Me.btnTotal.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnTotal.Name = "btnTotal"
+        Me.btnTotal.Padding = New System.Windows.Forms.Padding(6)
+        Me.btnTotal.Size = New System.Drawing.Size(150, 40)
+        Me.btnTotal.TabIndex = 14
+        Me.btnTotal.Text = "Total Rekapitulasi"
+        Me.btnTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTotal.UseVisualStyleBackColor = False
         '
         'Home
         '
@@ -471,14 +497,14 @@ Partial Class Home
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
+        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
-        Me.TableLayoutPanel3.ResumeLayout(False)
-        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picKeluar, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PicCollapse, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TableLayoutPanel3.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -506,4 +532,5 @@ Partial Class Home
     Friend WithEvents btnPiutang As Button
     Friend WithEvents btnUmum As Button
     Friend WithEvents Button1 As Button
+    Friend WithEvents btnTotal As Button
 End Class

@@ -1,7 +1,10 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports System.ComponentModel
+Imports MySql.Data.MySqlClient
 Public Class Form1
 
     Public tglMasuk, noDaftar, noRm, nmPasien, tglKeluar, unit, kelas, statusKeluar, carabayar, penjamin, tglLahir, regUnit, tglDaftar, jk As String
+    Dim subKelas As String
+    Dim KoneksiString As String = "server=192.168.200.2;user=lis;password=lis1234;database=simrs;default command timeout=120;Convert Zero Datetime=True"
 
     Sub setColor(button As Button)
         btnHome.BackColor = Color.White
@@ -9,10 +12,9 @@ Public Class Form1
         btnBuku.BackColor = Color.White
         btnPiutang.BackColor = Color.White
         btnUmum.BackColor = Color.White
+        btnTotal.BackColor = Color.White
         button.BackColor = Color.FromArgb(209, 232, 223)
     End Sub
-
-    Dim subKelas As String
 
     Sub autoCaraBayar()
         Call koneksiServer()
@@ -26,6 +28,233 @@ Public Class Form1
         txtBayar.DisplayMember = "cara"
         txtBayar.ValueMember = "cara"
         txtBayar.AutoCompleteSource = AutoCompleteSource.ListItems
+    End Sub
+
+    Sub cariPasien()
+        Dim valCari As String = ""
+        If IsNumeric(txtCari.Text) Then
+            'MsgBox("angka")
+            Select Case txtCari.Text.Length
+                Case 1
+                    valCari = "0000000" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 2
+                    valCari = "000000" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 3
+                    valCari = "00000" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 4
+                    valCari = "0000" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 5
+                    valCari = "000" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 6
+                    valCari = "00" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 7
+                    valCari = "0" & txtCari.Text
+                    txtCari.Text = valCari
+                Case 8
+                    valCari = txtCari.Text
+                    txtCari.Text = valCari
+            End Select
+        Else
+            'MsgBox("alfabet")
+        End If
+
+        Call koneksiServer()
+        Dim query As String
+        Dim cmd As MySqlCommand
+        Dim da As MySqlDataAdapter
+        query = "SELECT noRekamedis
+                   FROM t_pasien
+                  WHERE ( nmPasien LIKE '%" & txtCari.Text & "%' OR noRekamedis = '" & txtCari.Text & "' )
+               ORDER BY noRekamedis ASC LIMIT 1"
+        Try
+            cmd = New MySqlCommand(query, conn)
+            da = New MySqlDataAdapter(cmd)
+
+            Dim str As New DataTable
+            str.Clear()
+            da.Fill(str)
+            If str.Rows.Count() > 0 Then
+                'txtCari.Text = str.Rows(0)(0).ToString
+                listRegistrasi(str.Rows(0)(0).ToString)
+            Else
+                MessageBox.Show("Pasien Tidak Ada / Belum Terdaftar", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        End Try
+        conn.Close()
+    End Sub
+
+    Sub cari2(rawat As String, bayar As String, kelas As String, tgl1 As Date, tgl2 As Date)
+        Dim cn As New MySqlConnection(KoneksiString)
+        Dim query As String = ""
+        Dim cmd As MySqlCommand
+        Dim dr As MySqlDataReader
+
+        If rawat.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
+            bayar.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
+            kelas.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then                 'SSS
+            'MsgBox("SSS")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                      GROUP BY noDaftar  
+                      ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
+                bayar <> "Semua" And
+                kelas.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then             'S0S
+            'MsgBox("S0S")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND carabayar = '" & txtBayar.Text & "'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                      GROUP BY noDaftar 
+                      ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
+                bayar.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
+                kelas.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then             'ISS
+            'MsgBox("ISS")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                        AND kelas != '-'
+                    GROUP BY noDaftar  
+                    ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
+                bayar <> "Semua" And
+                kelas.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then             'I0S
+            'MsgBox("I0S")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND carabayar = '" & txtBayar.Text & "'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                        AND kelas != '-'
+                      GROUP BY noDaftar  
+                      ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
+                bayar.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
+                txtKelas.Text <> "Semua" Then                                                     'IS0
+            'MsgBox("IS0")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND kelas = '" & subKelas & "'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                      GROUP BY noDaftar  
+                      ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
+                bayar <> "Semua" And
+                txtKelas.Text <> "Semua" Then                                                     'I00
+            'MsgBox("I00")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND carabayar = '" & txtBayar.Text & "'
+                        AND kelas = '" & subKelas & "'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                      GROUP BY noDaftar  
+                      ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Rawat Jalan", StringComparison.OrdinalIgnoreCase) And
+                bayar.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
+                kelas.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then            'JSS
+            'MsgBox("JSS")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                        AND kelas = '-'
+                    GROUP BY noDaftar  
+                    ORDER BY tglKeluarRawatJalan DESC"
+        ElseIf rawat.Equals("Rawat Jalan", StringComparison.OrdinalIgnoreCase) And
+                bayar <> "Semua" And
+                kelas.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then           'J0S
+            'MsgBox("J0S")
+            query = "SELECT *
+                       FROM vw_pasienkasir
+                      WHERE statusKeluar != 'batal'
+                        AND carabayar = '" & txtBayar.Text & "'
+                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "')
+                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(tgl1, "yyyy-MM-dd") & "' AND 
+                            '" & Format(DateAdd(DateInterval.Day, 0, tgl2), "yyyy-MM-dd") & "'))
+                        AND kelas = '-'
+                      GROUP BY noDaftar  
+                      ORDER BY tglKeluarRawatJalan DESC"
+        End If
+
+        Try
+            cn.Open()
+            cmd = New MySqlCommand(query, cn)
+            dr = cmd.ExecuteReader
+            DataGridView1.Rows.Clear()
+            Do While dr.Read
+                DataGridView1.Invoke(New Action(Function() DataGridView1.Rows.Add(dr.Item("tglMasukRawatJalan"), dr.Item("tglPulang"), dr.Item("noRekamedis"),
+                                       dr.Item("nmPasien"), dr.Item("unit"), dr.Item("noDaftar"),
+                                       dr.Item("kelas"), dr.Item("statusKeluar"), dr.Item("carabayar"),
+                                       dr.Item("penjamin"), dr.Item("tglLahir"), dr.Item("noRegistrasiRawatJalan"),
+                                       dr.Item("tglDaftar"), dr.Item("jenisKelamin"))))
+            Loop
+            dr.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        cn.Close()
+    End Sub
+
+    Sub listRegistrasi(norm As String)
+        Call koneksiServer()
+        Dim cmd As MySqlCommand
+        Dim dr As MySqlDataReader
+        Dim query As String
+        query = "CALL listpasienregistrasi2('" & norm & "')"
+
+        Try
+            cmd = New MySqlCommand(query, conn)
+            dr = cmd.ExecuteReader
+            DataGridView1.Rows.Clear()
+            Do While dr.Read
+                DataGridView1.Rows.Add(dr.Item("tglMasukRawatJalan"), dr.Item("tglPulang"), dr.Item("noRekamedis"),
+                                       dr.Item("nmPasien"), dr.Item("unit"), dr.Item("noDaftar"),
+                                       dr.Item("kelas"), dr.Item("statusKeluar"), dr.Item("carabayar"),
+                                       dr.Item("penjamin"), dr.Item("tglLahir"), dr.Item("noRegistrasiRawatJalan"),
+                                       dr.Item("tglDaftar"), dr.Item("jenisKelamin"))
+            Loop
+            dr.Close()
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+        conn.Close()
     End Sub
 
     Sub DaftarReg()
@@ -128,6 +357,11 @@ Public Class Form1
         Me.Hide()
     End Sub
 
+    Private Sub btnTotal_Click(sender As Object, e As EventArgs) Handles btnTotal.Click
+        TotalRekap.Show()
+        Me.Hide()
+    End Sub
+
     Private Sub btnOpsi_Click(sender As Object, e As EventArgs) Handles btnOpsi.Click
         If TableLayoutPanel2.RowStyles(1).Height = 80 Then
             TableLayoutPanel2.RowStyles(1).SizeType = SizeType.Absolute
@@ -148,32 +382,7 @@ Public Class Form1
             MsgBox("Masukkan No.RM / Nama Pasien", MsgBoxStyle.Exclamation)
             Me.ErrorProvider1.SetError(Me.txtCari, "Masukkan No.RM / Nama Pasien")
         Else
-            Call koneksiServer()
-            Dim query As String
-            Dim cmd As MySqlCommand
-            Dim dr As MySqlDataReader
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND nmPasien LIKE '%" & txtCari.Text & "%' OR noRekamedis LIKE '%" & txtCari.Text & "%'
-                      GROUP BY noDaftar   
-                      ORDER BY tglPulang DESC"
-            Try
-                cmd = New MySqlCommand(query, conn)
-                dr = cmd.ExecuteReader
-                DataGridView1.Rows.Clear()
-                Do While dr.Read
-                    DataGridView1.Rows.Add(dr.Item("tglMasukRawatJalan"), dr.Item("tglPulang"), dr.Item("noRekamedis"),
-                                           dr.Item("nmPasien"), dr.Item("unit"), dr.Item("noDaftar"),
-                                           dr.Item("kelas"), dr.Item("statusKeluar"), dr.Item("carabayar"),
-                                           dr.Item("penjamin"), dr.Item("tglLahir"), dr.Item("noRegistrasiRawatJalan"),
-                                           dr.Item("tglDaftar"), dr.Item("jenisKelamin"))
-                Loop
-                dr.Close()
-            Catch ex As Exception
-                MsgBox(ex.ToString)
-            End Try
-            conn.Close()
+            Call cariPasien()
         End If
     End Sub
 
@@ -182,174 +391,13 @@ Public Class Form1
             If txtCari.Text = "" Then
                 Call DaftarReg()
             Else
-                Call koneksiServer()
-                Dim query As String
-                Dim cmd As MySqlCommand
-                Dim dr As MySqlDataReader
-                query = "SELECT *
-                           FROM vw_pasienkasir
-                          WHERE statusKeluar != 'batal'
-                            AND nmPasien LIKE '%" & txtCari.Text & "%' OR noRekamedis LIKE '%" & txtCari.Text & "%'
-                          GROUP BY noDaftar   
-                          ORDER BY tglPulang DESC"
-                Try
-                    cmd = New MySqlCommand(query, conn)
-                    dr = cmd.ExecuteReader
-                    DataGridView1.Rows.Clear()
-                    Do While dr.Read
-                        DataGridView1.Rows.Add(dr.Item("tglMasukRawatJalan"), dr.Item("tglPulang"), dr.Item("noRekamedis"),
-                                               dr.Item("nmPasien"), dr.Item("unit"), dr.Item("noDaftar"),
-                                               dr.Item("kelas"), dr.Item("statusKeluar"), dr.Item("carabayar"),
-                                               dr.Item("penjamin"), dr.Item("tglLahir"), dr.Item("noRegistrasiRawatJalan"),
-                                               dr.Item("tglDaftar"), dr.Item("jenisKelamin"))
-                    Loop
-                    dr.Close()
-                Catch ex As Exception
-                    MsgBox(ex.ToString)
-                End Try
-                conn.Close()
+                Call cariPasien()
             End If
         End If
     End Sub
 
     Private Sub btnCari2_Click(sender As Object, e As EventArgs) Handles btnCari2.Click
-        Call koneksiServer()
-        Dim query As String = ""
-        Dim cmd As MySqlCommand
-        Dim dr As MySqlDataReader
-
-        If txtRawat.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
-            txtBayar.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
-            txtKelas.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then                 'SSS
-            'MsgBox("SSS")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                      GROUP BY noDaftar  
-                      ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text <> "Semua" And
-                txtKelas.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then             'S0S
-            'MsgBox("S0S")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND carabayar = '" & txtBayar.Text & "'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                      GROUP BY noDaftar  
-                      ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
-                txtKelas.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then             'ISS
-            'MsgBox("ISS")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                        AND kelas != '-'
-                    GROUP BY noDaftar  
-                    ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text <> "Semua" And
-                txtKelas.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then             'I0S
-            'MsgBox("I0S")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND carabayar = '" & txtBayar.Text & "'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                        AND kelas != '-'
-                      GROUP BY noDaftar  
-                      ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
-                txtKelas.Text <> "Semua" Then                                                     'IS0
-            'MsgBox("IS0")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND kelas = '" & subKelas & "'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                      GROUP BY noDaftar  
-                      ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Rawat Inap", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text <> "Semua" And
-                txtKelas.Text <> "Semua" Then                                                     'I00
-            'MsgBox("I00")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND carabayar = '" & txtBayar.Text & "'
-                        AND kelas = '" & subKelas & "'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                      GROUP BY noDaftar  
-                      ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Rawat Jalan", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) And
-                txtKelas.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then            'JSS
-            'MsgBox("JSS")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                        AND kelas = '-'
-                    GROUP BY noDaftar  
-                    ORDER BY tglKeluarRawatJalan DESC"
-        ElseIf txtRawat.Text.Equals("Rawat Jalan", StringComparison.OrdinalIgnoreCase) And
-                txtBayar.Text <> "Semua" And
-                txtKelas.Text.Equals("Semua", StringComparison.OrdinalIgnoreCase) Then           'J0S
-            'MsgBox("J0S")
-            query = "SELECT *
-                       FROM vw_pasienkasir
-                      WHERE statusKeluar != 'batal'
-                        AND carabayar = '" & txtBayar.Text & "'
-                        AND ((SUBSTR(tglMasukRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "')
-                         OR (SUBSTR(tglKeluarRawatJalan,1,10) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND 
-                            '" & Format(DateAdd(DateInterval.Day, 0, DateTimePicker2.Value), "yyyy-MM-dd") & "'))
-                        AND kelas = '-'
-                      GROUP BY noDaftar  
-                      ORDER BY tglKeluarRawatJalan DESC"
-        End If
-
-        Try
-            cmd = New MySqlCommand(query, conn)
-            dr = cmd.ExecuteReader
-            DataGridView1.Rows.Clear()
-            Do While dr.Read
-                DataGridView1.Rows.Add(dr.Item("tglMasukRawatJalan"), dr.Item("tglPulang"), dr.Item("noRekamedis"),
-                                       dr.Item("nmPasien"), dr.Item("unit"), dr.Item("noDaftar"),
-                                       dr.Item("kelas"), dr.Item("statusKeluar"), dr.Item("carabayar"),
-                                       dr.Item("penjamin"), dr.Item("tglLahir"), dr.Item("noRegistrasiRawatJalan"),
-                                       dr.Item("tglDaftar"), dr.Item("jenisKelamin"))
-            Loop
-            dr.Close()
-        Catch ex As Exception
-            MsgBox(ex.ToString)
-        End Try
-        conn.Close()
+        cari2(txtRawat.Text, txtBayar.Text, txtKelas.Text, DateTimePicker1.Value, DateTimePicker2.Value)
     End Sub
 
     Private Sub txtRawat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles txtRawat.SelectedIndexChanged
@@ -495,5 +543,9 @@ Public Class Form1
 
     Private Sub btnOpsi_MouseUp(sender As Object, e As MouseEventArgs) Handles btnOpsi.MouseUp
         btnOpsi.ForeColor = Color.FromArgb(26, 141, 95)
+    End Sub
+
+    Private Sub bgwCari2_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgwCari2.DoWork
+        'cari2(txtRawat.Text, txtBayar.Text, txtKelas.Text, DateTimePicker1.Value, DateTimePicker2.Value)
     End Sub
 End Class

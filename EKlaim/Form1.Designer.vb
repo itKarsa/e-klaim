@@ -83,8 +83,10 @@ Partial Class Form1
         Me.btnBuku = New System.Windows.Forms.Button()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.btnPiutang = New System.Windows.Forms.Button()
-        Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.btnUmum = New System.Windows.Forms.Button()
+        Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
+        Me.bgwCari2 = New System.ComponentModel.BackgroundWorker()
+        Me.btnTotal = New System.Windows.Forms.Button()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -269,6 +271,7 @@ Partial Class Form1
         '
         Me.txtKelas.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.txtKelas.BackColor = System.Drawing.Color.White
+        Me.txtKelas.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.txtKelas.DropDownWidth = 150
         Me.txtKelas.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtKelas.ForeColor = System.Drawing.Color.Black
@@ -307,6 +310,7 @@ Partial Class Form1
         '
         Me.txtRawat.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.txtRawat.BackColor = System.Drawing.Color.White
+        Me.txtRawat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.txtRawat.DropDownWidth = 150
         Me.txtRawat.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRawat.ForeColor = System.Drawing.Color.Black
@@ -321,6 +325,7 @@ Partial Class Form1
         '
         Me.txtBayar.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.txtBayar.BackColor = System.Drawing.Color.White
+        Me.txtBayar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.txtBayar.DropDownWidth = 150
         Me.txtBayar.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtBayar.ForeColor = System.Drawing.Color.Black
@@ -758,11 +763,13 @@ Partial Class Form1
         Me.TableLayoutPanel5.Controls.Add(Me.Panel11, 1, 2)
         Me.TableLayoutPanel5.Controls.Add(Me.btnPiutang, 2, 4)
         Me.TableLayoutPanel5.Controls.Add(Me.btnUmum, 2, 5)
+        Me.TableLayoutPanel5.Controls.Add(Me.btnTotal, 2, 6)
         Me.TableLayoutPanel5.Location = New System.Drawing.Point(0, 35)
         Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
-        Me.TableLayoutPanel5.RowCount = 7
+        Me.TableLayoutPanel5.RowCount = 8
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10.0!))
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -872,10 +879,6 @@ Partial Class Form1
         Me.btnPiutang.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnPiutang.UseVisualStyleBackColor = False
         '
-        'ErrorProvider1
-        '
-        Me.ErrorProvider1.ContainerControl = Me
-        '
         'btnUmum
         '
         Me.btnUmum.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -897,6 +900,36 @@ Partial Class Form1
         Me.btnUmum.Text = "Rekapitulasi Piutang UMUM"
         Me.btnUmum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUmum.UseVisualStyleBackColor = False
+        '
+        'ErrorProvider1
+        '
+        Me.ErrorProvider1.ContainerControl = Me
+        '
+        'bgwCari2
+        '
+        Me.bgwCari2.WorkerReportsProgress = True
+        '
+        'btnTotal
+        '
+        Me.btnTotal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTotal.BackColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderSize = 0
+        Me.btnTotal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(239, Byte), Integer))
+        Me.btnTotal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.btnTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTotal.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTotal.Location = New System.Drawing.Point(17, 210)
+        Me.btnTotal.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnTotal.Name = "btnTotal"
+        Me.btnTotal.Padding = New System.Windows.Forms.Padding(6)
+        Me.btnTotal.Size = New System.Drawing.Size(150, 40)
+        Me.btnTotal.TabIndex = 14
+        Me.btnTotal.Text = "Total Rekapitulasi"
+        Me.btnTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTotal.UseVisualStyleBackColor = False
         '
         'Form1
         '
@@ -986,4 +1019,6 @@ Partial Class Form1
     Friend WithEvents txtUser As Label
     Friend WithEvents btnPiutang As Button
     Friend WithEvents btnUmum As Button
+    Friend WithEvents bgwCari2 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents btnTotal As Button
 End Class

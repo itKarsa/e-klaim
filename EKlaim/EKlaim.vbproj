@@ -14,6 +14,24 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>\\192.168.200.2\New folder\kelengkapan Pengembangan\_NEW SIMRS 2019\APPS\Publish\APP Eklaim\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>\\192.168.200.2\New folder\kelengkapan Pengembangan\_NEW SIMRS 2019\APPS\Publish\APP Eklaim\</InstallUrl>
+    <UpdateUrl>\\192.168.200.2\New folder\kelengkapan Pengembangan\_NEW SIMRS 2019\APPS\Publish\APP Eklaim\</UpdateUrl>
+    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +67,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>coin1.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>6BB2DADF6BD77C69B308DB4F7505D8FF5553C433</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>EKlaim_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -174,6 +204,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Koneksi.vb" />
+    <Compile Include="LoadingScreen.Designer.vb">
+      <DependentUpon>LoadingScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LoadingScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="LoginForm.Designer.vb">
       <DependentUpon>LoginForm.vb</DependentUpon>
     </Compile>
@@ -220,6 +256,18 @@
     <Compile Include="SettingIP.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Tes.Designer.vb">
+      <DependentUpon>Tes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Tes.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TotalRekap.Designer.vb">
+      <DependentUpon>TotalRekap.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TotalRekap.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WebService.Designer.vb">
       <DependentUpon>WebService.vb</DependentUpon>
     </Compile>
@@ -246,6 +294,9 @@
     <EmbeddedResource Include="Info.resx">
       <DependentUpon>Info.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LoadingScreen.resx">
+      <DependentUpon>LoadingScreen.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -267,11 +318,18 @@
     <EmbeddedResource Include="SettingIP.resx">
       <DependentUpon>SettingIP.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tes.resx">
+      <DependentUpon>Tes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TotalRekap.resx">
+      <DependentUpon>TotalRekap.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WebService.resx">
       <DependentUpon>WebService.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="EKlaim_TemporaryKey.pfx" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -343,9 +401,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="coin1.ico" />
+    <None Include="Resources\Spinner-1s-277px.gif" />
     <None Include="Resources\setting.png" />
     <None Include="Resources\settings.png" />
     <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

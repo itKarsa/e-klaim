@@ -6,6 +6,7 @@
         btnBuku.BackColor = Color.White
         btnPiutang.BackColor = Color.White
         btnUmum.BackColor = Color.White
+        btnTotal.BackColor = Color.White
         button.BackColor = Color.FromArgb(209, 232, 223)
     End Sub
 
@@ -67,6 +68,11 @@
 
     Private Sub btnUmum_Click(sender As Object, e As EventArgs) Handles btnUmum.Click
         RekapPiutangUmum.Show()
+        Me.Hide()
+    End Sub
+
+    Private Sub btnTotal_Click(sender As Object, e As EventArgs) Handles btnTotal.Click
+        TotalRekap.Show()
         Me.Hide()
     End Sub
 

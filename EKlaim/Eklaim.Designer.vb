@@ -32,10 +32,6 @@ Partial Class Eklaim
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Eklaim))
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.Label47 = New System.Windows.Forms.Label()
-        Me.txtEksekutif = New System.Windows.Forms.TextBox()
-        Me.pnleksekutif = New System.Windows.Forms.Panel()
-        Me.checkEksekutif = New System.Windows.Forms.CheckBox()
         Me.pnlIntensif = New System.Windows.Forms.Panel()
         Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
         Me.checkIntensif = New System.Windows.Forms.CheckBox()
@@ -43,6 +39,11 @@ Partial Class Eklaim
         Me.Label46 = New System.Windows.Forms.Label()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.Label45 = New System.Windows.Forms.Label()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.Label47 = New System.Windows.Forms.Label()
+        Me.txtEksekutif = New System.Windows.Forms.TextBox()
+        Me.pnleksekutif = New System.Windows.Forms.Panel()
+        Me.checkEksekutif = New System.Windows.Forms.CheckBox()
         Me.txtNoEklaimBaru = New System.Windows.Forms.Label()
         Me.line4 = New System.Windows.Forms.Panel()
         Me.txtSetAsuransi = New System.Windows.Forms.ComboBox()
@@ -76,6 +77,7 @@ Partial Class Eklaim
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel9 = New System.Windows.Forms.Panel()
+        Me.PicClose1 = New System.Windows.Forms.PictureBox()
         Me.line6 = New System.Windows.Forms.Panel()
         Me.txtLabelDetail = New System.Windows.Forms.Label()
         Me.dgvDetail = New System.Windows.Forms.DataGridView()
@@ -137,6 +139,7 @@ Partial Class Eklaim
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
         Me.line1 = New System.Windows.Forms.Panel()
         Me.txtUnit = New System.Windows.Forms.Label()
+        Me.picBack = New System.Windows.Forms.PictureBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.txtJaminan = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -156,11 +159,15 @@ Partial Class Eklaim
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.PicExpand = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.txtUser = New System.Windows.Forms.Label()
+        Me.picKeluar = New System.Windows.Forms.PictureBox()
+        Me.PicCollapse = New System.Windows.Forms.PictureBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
         Me.btnHome = New System.Windows.Forms.Button()
@@ -169,46 +176,59 @@ Partial Class Eklaim
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.btnPiutang = New System.Windows.Forms.Button()
         Me.btnUmum = New System.Windows.Forms.Button()
+        Me.btnTotal = New System.Windows.Forms.Button()
         Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.ErrorProvider2 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.ErrorProvider3 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.ErrorProvider4 = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.PicClose1 = New System.Windows.Forms.PictureBox()
-        Me.picBack = New System.Windows.Forms.PictureBox()
-        Me.PicExpand = New System.Windows.Forms.PictureBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.picKeluar = New System.Windows.Forms.PictureBox()
-        Me.PicCollapse = New System.Windows.Forms.PictureBox()
+        Me.bgwNonBedah = New System.ComponentModel.BackgroundWorker()
+        Me.bgwBedah = New System.ComponentModel.BackgroundWorker()
+        Me.bgwJasa = New System.ComponentModel.BackgroundWorker()
+        Me.bgwKonsul = New System.ComponentModel.BackgroundWorker()
+        Me.bgwTindakan = New System.ComponentModel.BackgroundWorker()
+        Me.bgwLab = New System.ComponentModel.BackgroundWorker()
+        Me.bgwPenunjang = New System.ComponentModel.BackgroundWorker()
+        Me.bgwRad = New System.ComponentModel.BackgroundWorker()
+        Me.bgwDarah = New System.ComponentModel.BackgroundWorker()
+        Me.bgwRehab = New System.ComponentModel.BackgroundWorker()
+        Me.bgwAkomodasi = New System.ComponentModel.BackgroundWorker()
+        Me.bgwIntensif = New System.ComponentModel.BackgroundWorker()
+        Me.bgwNonKronis = New System.ComponentModel.BackgroundWorker()
+        Me.bgwKronis = New System.ComponentModel.BackgroundWorker()
+        Me.bgwKemo = New System.ComponentModel.BackgroundWorker()
+        Me.bgwAlkes = New System.ComponentModel.BackgroundWorker()
+        Me.bgwBMHP = New System.ComponentModel.BackgroundWorker()
+        Me.bgwSewa = New System.ComponentModel.BackgroundWorker()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel5.SuspendLayout()
-        Me.pnleksekutif.SuspendLayout()
         Me.pnlIntensif.SuspendLayout()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnleksekutif.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.Panel9.SuspendLayout()
+        CType(Me.PicClose1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvDetail, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel11.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.TableLayoutPanel5.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.TableLayoutPanel8.SuspendLayout()
+        CType(Me.picBack, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel6.SuspendLayout()
+        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel7.SuspendLayout()
         Me.TableLayoutPanel6.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.picKeluar, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PicCollapse, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel7.SuspendLayout()
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ErrorProvider2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ErrorProvider3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ErrorProvider4, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PicClose1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.picBack, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.picKeluar, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PicCollapse, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TableLayoutPanel2
@@ -236,10 +256,11 @@ Partial Class Eklaim
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel5.BackColor = System.Drawing.Color.White
+        Me.Panel5.Controls.Add(Me.pnlIntensif)
+        Me.Panel5.Controls.Add(Me.ProgressBar1)
         Me.Panel5.Controls.Add(Me.Label47)
         Me.Panel5.Controls.Add(Me.txtEksekutif)
         Me.Panel5.Controls.Add(Me.pnleksekutif)
-        Me.Panel5.Controls.Add(Me.pnlIntensif)
         Me.Panel5.Controls.Add(Me.txtNoEklaimBaru)
         Me.Panel5.Controls.Add(Me.line4)
         Me.Panel5.Controls.Add(Me.txtSetAsuransi)
@@ -276,53 +297,6 @@ Partial Class Eklaim
         Me.Panel5.Size = New System.Drawing.Size(1437, 190)
         Me.Panel5.TabIndex = 23
         '
-        'Label47
-        '
-        Me.Label47.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.Label47.AutoSize = True
-        Me.Label47.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label47.ForeColor = System.Drawing.Color.Black
-        Me.Label47.Location = New System.Drawing.Point(908, 146)
-        Me.Label47.Name = "Label47"
-        Me.Label47.Size = New System.Drawing.Size(91, 17)
-        Me.Label47.TabIndex = 116
-        Me.Label47.Text = "Tarif Poli Eks. :"
-        Me.Label47.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.Label47.Visible = False
-        '
-        'txtEksekutif
-        '
-        Me.txtEksekutif.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.txtEksekutif.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtEksekutif.Location = New System.Drawing.Point(1009, 145)
-        Me.txtEksekutif.Name = "txtEksekutif"
-        Me.txtEksekutif.Size = New System.Drawing.Size(91, 23)
-        Me.txtEksekutif.TabIndex = 115
-        Me.txtEksekutif.Text = "0"
-        Me.txtEksekutif.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.txtEksekutif.Visible = False
-        '
-        'pnleksekutif
-        '
-        Me.pnleksekutif.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.pnleksekutif.Controls.Add(Me.checkEksekutif)
-        Me.pnleksekutif.Location = New System.Drawing.Point(429, 57)
-        Me.pnleksekutif.Name = "pnleksekutif"
-        Me.pnleksekutif.Size = New System.Drawing.Size(200, 29)
-        Me.pnleksekutif.TabIndex = 114
-        '
-        'checkEksekutif
-        '
-        Me.checkEksekutif.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.checkEksekutif.AutoSize = True
-        Me.checkEksekutif.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.checkEksekutif.Location = New System.Drawing.Point(13, 4)
-        Me.checkEksekutif.Name = "checkEksekutif"
-        Me.checkEksekutif.Size = New System.Drawing.Size(112, 21)
-        Me.checkEksekutif.TabIndex = 107
-        Me.checkEksekutif.Text = "Kelas Eksekutif"
-        Me.checkEksekutif.UseVisualStyleBackColor = True
-        '
         'pnlIntensif
         '
         Me.pnlIntensif.Anchor = System.Windows.Forms.AnchorStyles.Top
@@ -333,7 +307,7 @@ Partial Class Eklaim
         Me.pnlIntensif.Controls.Add(Me.Label46)
         Me.pnlIntensif.Controls.Add(Me.Label38)
         Me.pnlIntensif.Controls.Add(Me.Label45)
-        Me.pnlIntensif.Location = New System.Drawing.Point(429, 57)
+        Me.pnlIntensif.Location = New System.Drawing.Point(429, 60)
         Me.pnlIntensif.Name = "pnlIntensif"
         Me.pnlIntensif.Size = New System.Drawing.Size(401, 29)
         Me.pnlIntensif.TabIndex = 113
@@ -366,6 +340,7 @@ Partial Class Eklaim
         Me.NumericUpDown2.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.NumericUpDown2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.NumericUpDown2.Location = New System.Drawing.Point(310, 2)
+        Me.NumericUpDown2.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.NumericUpDown2.Name = "NumericUpDown2"
         Me.NumericUpDown2.Size = New System.Drawing.Size(40, 25)
         Me.NumericUpDown2.TabIndex = 111
@@ -414,6 +389,63 @@ Partial Class Eklaim
         Me.Label45.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.Label45.Visible = False
         '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar1.Location = New System.Drawing.Point(-5, 178)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(1450, 3)
+        Me.ProgressBar1.TabIndex = 117
+        '
+        'Label47
+        '
+        Me.Label47.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.Label47.AutoSize = True
+        Me.Label47.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label47.ForeColor = System.Drawing.Color.Black
+        Me.Label47.Location = New System.Drawing.Point(908, 146)
+        Me.Label47.Name = "Label47"
+        Me.Label47.Size = New System.Drawing.Size(91, 17)
+        Me.Label47.TabIndex = 116
+        Me.Label47.Text = "Tarif Poli Eks. :"
+        Me.Label47.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label47.Visible = False
+        '
+        'txtEksekutif
+        '
+        Me.txtEksekutif.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.txtEksekutif.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.txtEksekutif.Location = New System.Drawing.Point(1009, 145)
+        Me.txtEksekutif.Name = "txtEksekutif"
+        Me.txtEksekutif.Size = New System.Drawing.Size(91, 23)
+        Me.txtEksekutif.TabIndex = 115
+        Me.txtEksekutif.Text = "0"
+        Me.txtEksekutif.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtEksekutif.Visible = False
+        '
+        'pnleksekutif
+        '
+        Me.pnleksekutif.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.pnleksekutif.Controls.Add(Me.checkEksekutif)
+        Me.pnleksekutif.Location = New System.Drawing.Point(429, 57)
+        Me.pnleksekutif.Name = "pnleksekutif"
+        Me.pnleksekutif.Size = New System.Drawing.Size(200, 29)
+        Me.pnleksekutif.TabIndex = 114
+        Me.pnleksekutif.Visible = False
+        '
+        'checkEksekutif
+        '
+        Me.checkEksekutif.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.checkEksekutif.AutoSize = True
+        Me.checkEksekutif.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.checkEksekutif.Location = New System.Drawing.Point(13, 4)
+        Me.checkEksekutif.Name = "checkEksekutif"
+        Me.checkEksekutif.Size = New System.Drawing.Size(112, 21)
+        Me.checkEksekutif.TabIndex = 107
+        Me.checkEksekutif.Text = "Kelas Eksekutif"
+        Me.checkEksekutif.UseVisualStyleBackColor = True
+        '
         'txtNoEklaimBaru
         '
         Me.txtNoEklaimBaru.Anchor = System.Windows.Forms.AnchorStyles.None
@@ -432,7 +464,7 @@ Partial Class Eklaim
         '
         Me.line4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.line4.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.line4.Location = New System.Drawing.Point(-7, 176)
+        Me.line4.Location = New System.Drawing.Point(-5, 176)
         Me.line4.Name = "line4"
         Me.line4.Size = New System.Drawing.Size(1450, 2)
         Me.line4.TabIndex = 104
@@ -756,7 +788,7 @@ Partial Class Eklaim
         Me.Label33.AutoSize = True
         Me.Label33.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label33.ForeColor = System.Drawing.Color.Black
-        Me.Label33.Location = New System.Drawing.Point(197, 148)
+        Me.Label33.Location = New System.Drawing.Point(195, 148)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(42, 17)
         Me.Label33.TabIndex = 50
@@ -769,7 +801,7 @@ Partial Class Eklaim
         Me.Label32.AutoSize = True
         Me.Label32.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label32.ForeColor = System.Drawing.Color.Black
-        Me.Label32.Location = New System.Drawing.Point(138, 92)
+        Me.Label32.Location = New System.Drawing.Point(137, 92)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(100, 17)
         Me.Label32.TabIndex = 49
@@ -782,7 +814,7 @@ Partial Class Eklaim
         Me.Label31.AutoSize = True
         Me.Label31.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label31.ForeColor = System.Drawing.Color.Black
-        Me.Label31.Location = New System.Drawing.Point(156, 64)
+        Me.Label31.Location = New System.Drawing.Point(155, 64)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(82, 17)
         Me.Label31.TabIndex = 48
@@ -841,6 +873,19 @@ Partial Class Eklaim
         Me.Panel9.Name = "Panel9"
         Me.Panel9.Size = New System.Drawing.Size(713, 35)
         Me.Panel9.TabIndex = 0
+        '
+        'PicClose1
+        '
+        Me.PicClose1.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.PicClose1.BackColor = System.Drawing.Color.Transparent
+        Me.PicClose1.Image = Global.EKlaim.My.Resources.Resources.cancel
+        Me.PicClose1.Location = New System.Drawing.Point(697, 7)
+        Me.PicClose1.Margin = New System.Windows.Forms.Padding(0)
+        Me.PicClose1.Name = "PicClose1"
+        Me.PicClose1.Size = New System.Drawing.Size(12, 18)
+        Me.PicClose1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PicClose1.TabIndex = 5
+        Me.PicClose1.TabStop = False
         '
         'line6
         '
@@ -1018,7 +1063,7 @@ Partial Class Eklaim
         Me.TableLayoutPanel5.AutoScroll = True
         Me.TableLayoutPanel5.BackColor = System.Drawing.Color.White
         Me.TableLayoutPanel5.ColumnCount = 10
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50.0!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.50165!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.83168!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5.0!))
@@ -1027,7 +1072,7 @@ Partial Class Eklaim
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5.0!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.50165!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.83168!))
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 122.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 133.0!))
         Me.TableLayoutPanel5.Controls.Add(Me.txtSewaAlat, 8, 6)
         Me.TableLayoutPanel5.Controls.Add(Me.txtNonBedah, 2, 1)
         Me.TableLayoutPanel5.Controls.Add(Me.Label25, 7, 6)
@@ -1091,7 +1136,8 @@ Partial Class Eklaim
         '
         Me.txtSewaAlat.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtSewaAlat.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtSewaAlat.Location = New System.Drawing.Point(502, 229)
+        Me.txtSewaAlat.Location = New System.Drawing.Point(494, 229)
+        Me.txtSewaAlat.Margin = New System.Windows.Forms.Padding(0)
         Me.txtSewaAlat.Name = "txtSewaAlat"
         Me.txtSewaAlat.Size = New System.Drawing.Size(88, 27)
         Me.txtSewaAlat.TabIndex = 82
@@ -1102,7 +1148,8 @@ Partial Class Eklaim
         '
         Me.txtNonBedah.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtNonBedah.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtNonBedah.Location = New System.Drawing.Point(120, 54)
+        Me.txtNonBedah.Location = New System.Drawing.Point(136, 54)
+        Me.txtNonBedah.Margin = New System.Windows.Forms.Padding(0)
         Me.txtNonBedah.Name = "txtNonBedah"
         Me.txtNonBedah.Size = New System.Drawing.Size(88, 27)
         Me.txtNonBedah.TabIndex = 53
@@ -1115,7 +1162,7 @@ Partial Class Eklaim
         Me.Label25.AutoSize = True
         Me.Label25.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label25.ForeColor = System.Drawing.Color.Black
-        Me.Label25.Location = New System.Drawing.Point(432, 234)
+        Me.Label25.Location = New System.Drawing.Point(427, 234)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(64, 17)
         Me.Label25.TabIndex = 76
@@ -1126,7 +1173,8 @@ Partial Class Eklaim
         '
         Me.txtObatKemo.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtObatKemo.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtObatKemo.Location = New System.Drawing.Point(502, 194)
+        Me.txtObatKemo.Location = New System.Drawing.Point(494, 194)
+        Me.txtObatKemo.Margin = New System.Windows.Forms.Padding(0)
         Me.txtObatKemo.Name = "txtObatKemo"
         Me.txtObatKemo.Size = New System.Drawing.Size(88, 27)
         Me.txtObatKemo.TabIndex = 81
@@ -1137,10 +1185,12 @@ Partial Class Eklaim
         '
         Me.txtBMHP.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtBMHP.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtBMHP.Location = New System.Drawing.Point(311, 229)
+        Me.txtBMHP.Location = New System.Drawing.Point(315, 229)
+        Me.txtBMHP.Margin = New System.Windows.Forms.Padding(0)
         Me.txtBMHP.Name = "txtBMHP"
         Me.txtBMHP.Size = New System.Drawing.Size(88, 27)
         Me.txtBMHP.TabIndex = 70
+        Me.txtBMHP.Text = "0"
         Me.txtBMHP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Panel4
@@ -1205,7 +1255,7 @@ Partial Class Eklaim
         Me.Label19.AutoSize = True
         Me.Label19.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label19.ForeColor = System.Drawing.Color.Black
-        Me.Label19.Location = New System.Drawing.Point(262, 234)
+        Me.Label19.Location = New System.Drawing.Point(269, 234)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(43, 17)
         Me.Label19.TabIndex = 64
@@ -1216,20 +1266,24 @@ Partial Class Eklaim
         '
         Me.txtIntensif.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtIntensif.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtIntensif.Location = New System.Drawing.Point(502, 159)
+        Me.txtIntensif.Location = New System.Drawing.Point(494, 159)
+        Me.txtIntensif.Margin = New System.Windows.Forms.Padding(0)
         Me.txtIntensif.Name = "txtIntensif"
         Me.txtIntensif.Size = New System.Drawing.Size(88, 27)
         Me.txtIntensif.TabIndex = 80
+        Me.txtIntensif.Text = "0"
         Me.txtIntensif.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'txtAlkes
         '
         Me.txtAlkes.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtAlkes.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtAlkes.Location = New System.Drawing.Point(120, 229)
+        Me.txtAlkes.Location = New System.Drawing.Point(136, 229)
+        Me.txtAlkes.Margin = New System.Windows.Forms.Padding(0)
         Me.txtAlkes.Name = "txtAlkes"
         Me.txtAlkes.Size = New System.Drawing.Size(88, 27)
         Me.txtAlkes.TabIndex = 58
+        Me.txtAlkes.Text = "0"
         Me.txtAlkes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label26
@@ -1238,7 +1292,7 @@ Partial Class Eklaim
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label26.ForeColor = System.Drawing.Color.Black
-        Me.Label26.Location = New System.Drawing.Point(420, 190)
+        Me.Label26.Location = New System.Drawing.Point(415, 190)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(76, 34)
         Me.Label26.TabIndex = 75
@@ -1251,7 +1305,7 @@ Partial Class Eklaim
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label18.ForeColor = System.Drawing.Color.Black
-        Me.Label18.Location = New System.Drawing.Point(76, 234)
+        Me.Label18.Location = New System.Drawing.Point(95, 234)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(38, 17)
         Me.Label18.TabIndex = 52
@@ -1264,7 +1318,7 @@ Partial Class Eklaim
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label13.ForeColor = System.Drawing.Color.Black
-        Me.Label13.Location = New System.Drawing.Point(41, 50)
+        Me.Label13.Location = New System.Drawing.Point(60, 50)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(73, 34)
         Me.Label13.TabIndex = 47
@@ -1277,7 +1331,7 @@ Partial Class Eklaim
         Me.Label24.AutoSize = True
         Me.Label24.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label24.ForeColor = System.Drawing.Color.Black
-        Me.Label24.Location = New System.Drawing.Point(244, 50)
+        Me.Label24.Location = New System.Drawing.Point(251, 50)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(61, 34)
         Me.Label24.TabIndex = 59
@@ -1288,17 +1342,20 @@ Partial Class Eklaim
         '
         Me.txtObatKronis.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtObatKronis.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtObatKronis.Location = New System.Drawing.Point(311, 194)
+        Me.txtObatKronis.Location = New System.Drawing.Point(315, 194)
+        Me.txtObatKronis.Margin = New System.Windows.Forms.Padding(0)
         Me.txtObatKronis.Name = "txtObatKronis"
         Me.txtObatKronis.Size = New System.Drawing.Size(88, 27)
         Me.txtObatKronis.TabIndex = 69
+        Me.txtObatKronis.Text = "0"
         Me.txtObatKronis.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'txtDarah
         '
         Me.txtDarah.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtDarah.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtDarah.Location = New System.Drawing.Point(502, 124)
+        Me.txtDarah.Location = New System.Drawing.Point(494, 124)
+        Me.txtDarah.Margin = New System.Windows.Forms.Padding(0)
         Me.txtDarah.Name = "txtDarah"
         Me.txtDarah.Size = New System.Drawing.Size(88, 27)
         Me.txtDarah.TabIndex = 79
@@ -1311,7 +1368,7 @@ Partial Class Eklaim
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(447, 155)
+        Me.Label27.Location = New System.Drawing.Point(442, 155)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(49, 34)
         Me.Label27.TabIndex = 74
@@ -1324,7 +1381,7 @@ Partial Class Eklaim
         Me.Label20.AutoSize = True
         Me.Label20.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label20.ForeColor = System.Drawing.Color.Black
-        Me.Label20.Location = New System.Drawing.Point(227, 199)
+        Me.Label20.Location = New System.Drawing.Point(234, 199)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(78, 17)
         Me.Label20.TabIndex = 63
@@ -1335,7 +1392,8 @@ Partial Class Eklaim
         '
         Me.txtBedah.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtBedah.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtBedah.Location = New System.Drawing.Point(311, 54)
+        Me.txtBedah.Location = New System.Drawing.Point(315, 54)
+        Me.txtBedah.Margin = New System.Windows.Forms.Padding(0)
         Me.txtBedah.Name = "txtBedah"
         Me.txtBedah.Size = New System.Drawing.Size(88, 27)
         Me.txtBedah.TabIndex = 65
@@ -1348,7 +1406,7 @@ Partial Class Eklaim
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(429, 59)
+        Me.Label30.Location = New System.Drawing.Point(424, 59)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(67, 17)
         Me.Label30.TabIndex = 71
@@ -1359,17 +1417,20 @@ Partial Class Eklaim
         '
         Me.txtObat.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtObat.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtObat.Location = New System.Drawing.Point(120, 194)
+        Me.txtObat.Location = New System.Drawing.Point(136, 194)
+        Me.txtObat.Margin = New System.Windows.Forms.Padding(0)
         Me.txtObat.Name = "txtObat"
         Me.txtObat.Size = New System.Drawing.Size(88, 27)
         Me.txtObat.TabIndex = 57
+        Me.txtObat.Text = "0"
         Me.txtObat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'txtPenunjang
         '
         Me.txtPenunjang.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtPenunjang.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtPenunjang.Location = New System.Drawing.Point(502, 89)
+        Me.txtPenunjang.Location = New System.Drawing.Point(494, 89)
+        Me.txtPenunjang.Margin = New System.Windows.Forms.Padding(0)
         Me.txtPenunjang.Name = "txtPenunjang"
         Me.txtPenunjang.Size = New System.Drawing.Size(88, 27)
         Me.txtPenunjang.TabIndex = 78
@@ -1380,10 +1441,12 @@ Partial Class Eklaim
         '
         Me.txtAkomodasi.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtAkomodasi.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtAkomodasi.Location = New System.Drawing.Point(311, 159)
+        Me.txtAkomodasi.Location = New System.Drawing.Point(315, 159)
+        Me.txtAkomodasi.Margin = New System.Windows.Forms.Padding(0)
         Me.txtAkomodasi.Name = "txtAkomodasi"
         Me.txtAkomodasi.Size = New System.Drawing.Size(88, 27)
         Me.txtAkomodasi.TabIndex = 68
+        Me.txtAkomodasi.Text = "0"
         Me.txtAkomodasi.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label17
@@ -1392,7 +1455,7 @@ Partial Class Eklaim
         Me.Label17.AutoSize = True
         Me.Label17.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label17.ForeColor = System.Drawing.Color.Black
-        Me.Label17.Location = New System.Drawing.Point(48, 190)
+        Me.Label17.Location = New System.Drawing.Point(67, 190)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(66, 34)
         Me.Label17.TabIndex = 51
@@ -1403,10 +1466,12 @@ Partial Class Eklaim
         '
         Me.txtKonsul.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtKonsul.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtKonsul.Location = New System.Drawing.Point(502, 54)
+        Me.txtKonsul.Location = New System.Drawing.Point(494, 54)
+        Me.txtKonsul.Margin = New System.Windows.Forms.Padding(0)
         Me.txtKonsul.Name = "txtKonsul"
         Me.txtKonsul.Size = New System.Drawing.Size(88, 27)
         Me.txtKonsul.TabIndex = 77
+        Me.txtKonsul.Text = "0"
         Me.txtKonsul.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label28
@@ -1415,7 +1480,7 @@ Partial Class Eklaim
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(430, 120)
+        Me.Label28.Location = New System.Drawing.Point(425, 120)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(66, 34)
         Me.Label28.TabIndex = 73
@@ -1428,7 +1493,7 @@ Partial Class Eklaim
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label14.ForeColor = System.Drawing.Color.Black
-        Me.Label14.Location = New System.Drawing.Point(39, 94)
+        Me.Label14.Location = New System.Drawing.Point(58, 94)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(75, 17)
         Me.Label14.TabIndex = 48
@@ -1441,7 +1506,7 @@ Partial Class Eklaim
         Me.Label21.AutoSize = True
         Me.Label21.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label21.ForeColor = System.Drawing.Color.Black
-        Me.Label21.Location = New System.Drawing.Point(232, 155)
+        Me.Label21.Location = New System.Drawing.Point(239, 155)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(73, 34)
         Me.Label21.TabIndex = 62
@@ -1452,10 +1517,12 @@ Partial Class Eklaim
         '
         Me.txtPPA.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtPPA.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtPPA.Location = New System.Drawing.Point(120, 89)
+        Me.txtPPA.Location = New System.Drawing.Point(136, 89)
+        Me.txtPPA.Margin = New System.Windows.Forms.Padding(0)
         Me.txtPPA.Name = "txtPPA"
         Me.txtPPA.Size = New System.Drawing.Size(88, 27)
         Me.txtPPA.TabIndex = 54
+        Me.txtPPA.Text = "0"
         Me.txtPPA.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label23
@@ -1464,9 +1531,9 @@ Partial Class Eklaim
         Me.Label23.AutoSize = True
         Me.Label23.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label23.ForeColor = System.Drawing.Color.Black
-        Me.Label23.Location = New System.Drawing.Point(221, 94)
+        Me.Label23.Location = New System.Drawing.Point(235, 85)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(84, 17)
+        Me.Label23.Size = New System.Drawing.Size(77, 34)
         Me.Label23.TabIndex = 60
         Me.Label23.Text = "Keperawatan"
         Me.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -1475,10 +1542,12 @@ Partial Class Eklaim
         '
         Me.txtKeperawatan.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtKeperawatan.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtKeperawatan.Location = New System.Drawing.Point(311, 89)
+        Me.txtKeperawatan.Location = New System.Drawing.Point(315, 89)
+        Me.txtKeperawatan.Margin = New System.Windows.Forms.Padding(0)
         Me.txtKeperawatan.Name = "txtKeperawatan"
         Me.txtKeperawatan.Size = New System.Drawing.Size(88, 27)
         Me.txtKeperawatan.TabIndex = 66
+        Me.txtKeperawatan.Text = "0"
         Me.txtKeperawatan.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'line5
@@ -1486,16 +1555,17 @@ Partial Class Eklaim
         Me.line5.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.line5.BackColor = System.Drawing.Color.WhiteSmoke
         Me.TableLayoutPanel5.SetColumnSpan(Me.line5, 8)
-        Me.line5.Location = New System.Drawing.Point(28, 293)
+        Me.line5.Location = New System.Drawing.Point(53, 293)
         Me.line5.Name = "line5"
-        Me.line5.Size = New System.Drawing.Size(562, 2)
+        Me.line5.Size = New System.Drawing.Size(526, 2)
         Me.line5.TabIndex = 84
         '
         'txtRehab
         '
         Me.txtRehab.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtRehab.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtRehab.Location = New System.Drawing.Point(120, 159)
+        Me.txtRehab.Location = New System.Drawing.Point(136, 159)
+        Me.txtRehab.Margin = New System.Windows.Forms.Padding(0)
         Me.txtRehab.Name = "txtRehab"
         Me.txtRehab.Size = New System.Drawing.Size(88, 27)
         Me.txtRehab.TabIndex = 56
@@ -1506,10 +1576,12 @@ Partial Class Eklaim
         '
         Me.txtLab.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtLab.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtLab.Location = New System.Drawing.Point(311, 124)
+        Me.txtLab.Location = New System.Drawing.Point(315, 124)
+        Me.txtLab.Margin = New System.Windows.Forms.Padding(0)
         Me.txtLab.Name = "txtLab"
         Me.txtLab.Size = New System.Drawing.Size(88, 27)
         Me.txtLab.TabIndex = 67
+        Me.txtLab.Text = "0"
         Me.txtLab.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label29
@@ -1518,7 +1590,7 @@ Partial Class Eklaim
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(428, 94)
+        Me.Label29.Location = New System.Drawing.Point(423, 94)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(68, 17)
         Me.Label29.TabIndex = 72
@@ -1531,7 +1603,7 @@ Partial Class Eklaim
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label15.ForeColor = System.Drawing.Color.Black
-        Me.Label15.Location = New System.Drawing.Point(50, 129)
+        Me.Label15.Location = New System.Drawing.Point(69, 129)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(64, 17)
         Me.Label15.TabIndex = 49
@@ -1544,7 +1616,7 @@ Partial Class Eklaim
         Me.Label16.AutoSize = True
         Me.Label16.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(40, 164)
+        Me.Label16.Location = New System.Drawing.Point(59, 164)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(74, 17)
         Me.Label16.TabIndex = 50
@@ -1555,10 +1627,12 @@ Partial Class Eklaim
         '
         Me.txtRadiologi.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.txtRadiologi.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.txtRadiologi.Location = New System.Drawing.Point(120, 124)
+        Me.txtRadiologi.Location = New System.Drawing.Point(136, 124)
+        Me.txtRadiologi.Margin = New System.Windows.Forms.Padding(0)
         Me.txtRadiologi.Name = "txtRadiologi"
         Me.txtRadiologi.Size = New System.Drawing.Size(88, 27)
         Me.txtRadiologi.TabIndex = 55
+        Me.txtRadiologi.Text = "0"
         Me.txtRadiologi.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label22
@@ -1567,7 +1641,7 @@ Partial Class Eklaim
         Me.Label22.AutoSize = True
         Me.Label22.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.Label22.ForeColor = System.Drawing.Color.Black
-        Me.Label22.Location = New System.Drawing.Point(229, 120)
+        Me.Label22.Location = New System.Drawing.Point(236, 120)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(76, 34)
         Me.Label22.TabIndex = 61
@@ -1579,6 +1653,7 @@ Partial Class Eklaim
         Me.btnSimpan.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.btnSimpan.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
         Me.TableLayoutPanel5.SetColumnSpan(Me.btnSimpan, 2)
+        Me.btnSimpan.Enabled = False
         Me.btnSimpan.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.btnSimpan.FlatAppearance.BorderSize = 0
         Me.btnSimpan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
@@ -1586,7 +1661,7 @@ Partial Class Eklaim
         Me.btnSimpan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSimpan.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSimpan.ForeColor = System.Drawing.Color.White
-        Me.btnSimpan.Location = New System.Drawing.Point(439, 301)
+        Me.btnSimpan.Location = New System.Drawing.Point(434, 301)
         Me.btnSimpan.Name = "btnSimpan"
         Me.btnSimpan.Size = New System.Drawing.Size(122, 34)
         Me.btnSimpan.TabIndex = 83
@@ -1598,6 +1673,7 @@ Partial Class Eklaim
         Me.CheckedListBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom), System.Windows.Forms.AnchorStyles)
         Me.CheckedListBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TableLayoutPanel5.SetColumnSpan(Me.CheckedListBox1, 10)
+        Me.CheckedListBox1.Enabled = False
         Me.CheckedListBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CheckedListBox1.ForeColor = System.Drawing.Color.Black
         Me.CheckedListBox1.FormattingEnabled = True
@@ -1615,6 +1691,7 @@ Partial Class Eklaim
         Me.Button2.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.Button2.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
         Me.TableLayoutPanel5.SetColumnSpan(Me.Button2, 2)
+        Me.Button2.Enabled = False
         Me.Button2.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.Button2.FlatAppearance.BorderSize = 0
         Me.Button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(95, Byte), Integer))
@@ -1622,7 +1699,7 @@ Partial Class Eklaim
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Button2.ForeColor = System.Drawing.Color.White
-        Me.Button2.Location = New System.Drawing.Point(57, 301)
+        Me.Button2.Location = New System.Drawing.Point(76, 301)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(122, 34)
         Me.Button2.TabIndex = 90
@@ -1696,6 +1773,19 @@ Partial Class Eklaim
         Me.txtUnit.TabIndex = 36
         Me.txtUnit.Text = "Poli / IGD / Ruang"
         Me.txtUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'picBack
+        '
+        Me.picBack.BackColor = System.Drawing.Color.Transparent
+        Me.picBack.Enabled = False
+        Me.picBack.Image = CType(resources.GetObject("picBack.Image"), System.Drawing.Image)
+        Me.picBack.Location = New System.Drawing.Point(0, 0)
+        Me.picBack.Margin = New System.Windows.Forms.Padding(0)
+        Me.picBack.Name = "picBack"
+        Me.picBack.Size = New System.Drawing.Size(36, 27)
+        Me.picBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picBack.TabIndex = 37
+        Me.picBack.TabStop = False
         '
         'Label9
         '
@@ -1951,6 +2041,20 @@ Partial Class Eklaim
         Me.Panel6.Size = New System.Drawing.Size(256, 35)
         Me.Panel6.TabIndex = 3
         '
+        'PicExpand
+        '
+        Me.PicExpand.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.PicExpand.BackColor = System.Drawing.Color.Transparent
+        Me.PicExpand.Image = Global.EKlaim.My.Resources.Resources.opsi2
+        Me.PicExpand.Location = New System.Drawing.Point(229, 9)
+        Me.PicExpand.Margin = New System.Windows.Forms.Padding(0)
+        Me.PicExpand.Name = "PicExpand"
+        Me.PicExpand.Size = New System.Drawing.Size(25, 24)
+        Me.PicExpand.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PicExpand.TabIndex = 4
+        Me.PicExpand.TabStop = False
+        '
         'Label1
         '
         Me.Label1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -2013,6 +2117,19 @@ Partial Class Eklaim
         Me.Panel10.Size = New System.Drawing.Size(1, 28)
         Me.Panel10.TabIndex = 8
         '
+        'PictureBox2
+        '
+        Me.PictureBox2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
+        Me.PictureBox2.Location = New System.Drawing.Point(0, 0)
+        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(0)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(40, 34)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox2.TabIndex = 0
+        Me.PictureBox2.TabStop = False
+        '
         'txtUser
         '
         Me.txtUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -2027,6 +2144,34 @@ Partial Class Eklaim
         Me.txtUser.TabIndex = 2
         Me.txtUser.Text = "USER"
         Me.txtUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'picKeluar
+        '
+        Me.picKeluar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picKeluar.BackColor = System.Drawing.Color.Transparent
+        Me.picKeluar.Image = Global.EKlaim.My.Resources.Resources.signs_2
+        Me.picKeluar.Location = New System.Drawing.Point(1415, 0)
+        Me.picKeluar.Margin = New System.Windows.Forms.Padding(0)
+        Me.picKeluar.Name = "picKeluar"
+        Me.picKeluar.Size = New System.Drawing.Size(40, 35)
+        Me.picKeluar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picKeluar.TabIndex = 3
+        Me.picKeluar.TabStop = False
+        '
+        'PicCollapse
+        '
+        Me.PicCollapse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PicCollapse.BackColor = System.Drawing.Color.Transparent
+        Me.PicCollapse.Image = Global.EKlaim.My.Resources.Resources.opsi1
+        Me.PicCollapse.Location = New System.Drawing.Point(10, 9)
+        Me.PicCollapse.Margin = New System.Windows.Forms.Padding(0)
+        Me.PicCollapse.Name = "PicCollapse"
+        Me.PicCollapse.Size = New System.Drawing.Size(25, 24)
+        Me.PicCollapse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PicCollapse.TabIndex = 5
+        Me.PicCollapse.TabStop = False
         '
         'Label12
         '
@@ -2062,11 +2207,13 @@ Partial Class Eklaim
         Me.TableLayoutPanel7.Controls.Add(Me.Panel8, 1, 2)
         Me.TableLayoutPanel7.Controls.Add(Me.btnPiutang, 2, 4)
         Me.TableLayoutPanel7.Controls.Add(Me.btnUmum, 2, 5)
+        Me.TableLayoutPanel7.Controls.Add(Me.btnTotal, 2, 6)
         Me.TableLayoutPanel7.Location = New System.Drawing.Point(0, 35)
         Me.TableLayoutPanel7.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel7.Name = "TableLayoutPanel7"
-        Me.TableLayoutPanel7.RowCount = 7
+        Me.TableLayoutPanel7.RowCount = 8
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10.0!))
+        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -2198,6 +2345,28 @@ Partial Class Eklaim
         Me.btnUmum.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnUmum.UseVisualStyleBackColor = False
         '
+        'btnTotal
+        '
+        Me.btnTotal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnTotal.BackColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.btnTotal.FlatAppearance.BorderSize = 0
+        Me.btnTotal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(239, Byte), Integer))
+        Me.btnTotal.FlatAppearance.MouseOverBackColor = System.Drawing.Color.GhostWhite
+        Me.btnTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTotal.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTotal.Location = New System.Drawing.Point(17, 210)
+        Me.btnTotal.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnTotal.Name = "btnTotal"
+        Me.btnTotal.Padding = New System.Windows.Forms.Padding(6)
+        Me.btnTotal.Size = New System.Drawing.Size(229, 40)
+        Me.btnTotal.TabIndex = 14
+        Me.btnTotal.Text = "Total Rekapitulasi"
+        Me.btnTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnTotal.UseVisualStyleBackColor = False
+        '
         'ErrorProvider1
         '
         Me.ErrorProvider1.ContainerControl = Me
@@ -2214,85 +2383,59 @@ Partial Class Eklaim
         '
         Me.ErrorProvider4.ContainerControl = Me
         '
-        'PicClose1
+        'bgwNonBedah
         '
-        Me.PicClose1.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.PicClose1.BackColor = System.Drawing.Color.Transparent
-        Me.PicClose1.Image = Global.EKlaim.My.Resources.Resources.cancel
-        Me.PicClose1.Location = New System.Drawing.Point(697, 7)
-        Me.PicClose1.Margin = New System.Windows.Forms.Padding(0)
-        Me.PicClose1.Name = "PicClose1"
-        Me.PicClose1.Size = New System.Drawing.Size(12, 18)
-        Me.PicClose1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PicClose1.TabIndex = 5
-        Me.PicClose1.TabStop = False
         '
-        'picBack
+        'bgwBedah
         '
-        Me.picBack.BackColor = System.Drawing.Color.Transparent
-        Me.picBack.Image = CType(resources.GetObject("picBack.Image"), System.Drawing.Image)
-        Me.picBack.Location = New System.Drawing.Point(0, 0)
-        Me.picBack.Margin = New System.Windows.Forms.Padding(0)
-        Me.picBack.Name = "picBack"
-        Me.picBack.Size = New System.Drawing.Size(36, 27)
-        Me.picBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picBack.TabIndex = 37
-        Me.picBack.TabStop = False
         '
-        'PicExpand
+        'bgwJasa
         '
-        Me.PicExpand.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PicExpand.BackColor = System.Drawing.Color.Transparent
-        Me.PicExpand.Image = Global.EKlaim.My.Resources.Resources.opsi2
-        Me.PicExpand.Location = New System.Drawing.Point(229, 9)
-        Me.PicExpand.Margin = New System.Windows.Forms.Padding(0)
-        Me.PicExpand.Name = "PicExpand"
-        Me.PicExpand.Size = New System.Drawing.Size(25, 24)
-        Me.PicExpand.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PicExpand.TabIndex = 4
-        Me.PicExpand.TabStop = False
         '
-        'PictureBox2
+        'bgwKonsul
         '
-        Me.PictureBox2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(0, 0)
-        Me.PictureBox2.Margin = New System.Windows.Forms.Padding(0)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(40, 34)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox2.TabIndex = 0
-        Me.PictureBox2.TabStop = False
         '
-        'picKeluar
+        'bgwTindakan
         '
-        Me.picKeluar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.picKeluar.BackColor = System.Drawing.Color.Transparent
-        Me.picKeluar.Image = Global.EKlaim.My.Resources.Resources.signs_2
-        Me.picKeluar.Location = New System.Drawing.Point(1415, 0)
-        Me.picKeluar.Margin = New System.Windows.Forms.Padding(0)
-        Me.picKeluar.Name = "picKeluar"
-        Me.picKeluar.Size = New System.Drawing.Size(40, 35)
-        Me.picKeluar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picKeluar.TabIndex = 3
-        Me.picKeluar.TabStop = False
         '
-        'PicCollapse
+        'bgwLab
         '
-        Me.PicCollapse.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.PicCollapse.BackColor = System.Drawing.Color.Transparent
-        Me.PicCollapse.Image = Global.EKlaim.My.Resources.Resources.opsi1
-        Me.PicCollapse.Location = New System.Drawing.Point(10, 9)
-        Me.PicCollapse.Margin = New System.Windows.Forms.Padding(0)
-        Me.PicCollapse.Name = "PicCollapse"
-        Me.PicCollapse.Size = New System.Drawing.Size(25, 24)
-        Me.PicCollapse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PicCollapse.TabIndex = 5
-        Me.PicCollapse.TabStop = False
+        '
+        'bgwPenunjang
+        '
+        '
+        'bgwRad
+        '
+        '
+        'bgwDarah
+        '
+        '
+        'bgwRehab
+        '
+        '
+        'bgwAkomodasi
+        '
+        '
+        'bgwIntensif
+        '
+        '
+        'bgwNonKronis
+        '
+        '
+        'bgwKronis
+        '
+        '
+        'bgwKemo
+        '
+        '
+        'bgwAlkes
+        '
+        '
+        'bgwBMHP
+        '
+        '
+        'bgwSewa
+        '
         '
         'Eklaim
         '
@@ -2307,15 +2450,16 @@ Partial Class Eklaim
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
-        Me.pnleksekutif.ResumeLayout(False)
-        Me.pnleksekutif.PerformLayout()
         Me.pnlIntensif.ResumeLayout(False)
         Me.pnlIntensif.PerformLayout()
         CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnleksekutif.ResumeLayout(False)
+        Me.pnleksekutif.PerformLayout()
         Me.TableLayoutPanel3.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.Panel9.ResumeLayout(False)
+        CType(Me.PicClose1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvDetail, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel11.ResumeLayout(False)
         Me.Panel11.PerformLayout()
@@ -2326,22 +2470,21 @@ Partial Class Eklaim
         Me.Panel4.PerformLayout()
         Me.TableLayoutPanel8.ResumeLayout(False)
         Me.TableLayoutPanel8.PerformLayout()
+        CType(Me.picBack, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel6.ResumeLayout(False)
+        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel7.ResumeLayout(False)
         Me.TableLayoutPanel6.ResumeLayout(False)
         Me.TableLayoutPanel6.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.picKeluar, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PicCollapse, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel7.ResumeLayout(False)
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ErrorProvider2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ErrorProvider3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ErrorProvider4, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PicClose1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.picBack, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PicExpand, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.picKeluar, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PicCollapse, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -2494,4 +2637,24 @@ Partial Class Eklaim
     Friend WithEvents txtEksekutif As TextBox
     Friend WithEvents pnleksekutif As Panel
     Friend WithEvents checkEksekutif As CheckBox
+    Friend WithEvents bgwNonBedah As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwBedah As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwJasa As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwKonsul As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwTindakan As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwLab As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwPenunjang As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwRad As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwDarah As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwRehab As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwAkomodasi As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwIntensif As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwNonKronis As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwKronis As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwKemo As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwAlkes As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwBMHP As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgwSewa As System.ComponentModel.BackgroundWorker
+    Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents btnTotal As Button
 End Class
